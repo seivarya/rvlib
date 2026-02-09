@@ -3,7 +3,6 @@
 #ifndef SNODE_H
 #define SNODE_H
 
-#include <stdlib.h>
 #include <rvlib/td.h>
 
 typedef struct snode snode;

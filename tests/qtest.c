@@ -1,9 +1,5 @@
-/*
- * qtest.c: thorough tests for queue
- */
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <rvlib/rvlib.h>
 
 static int failures = 0;
@@ -30,7 +26,7 @@ static void test_empty_operations(void) {
 	CHECK(is_qempty(q) == 1);
 	CHECK(get_front(q) == NULL);
 	CHECK(get_rear(q) == NULL);
-	dequeue(q); /* no-op on empty */
+	dequeue(q);
 	queue_destruct(q);
 }
 
@@ -40,8 +36,8 @@ static void test_enqueue_dequeue_single(void) {
 	enqueue(q, &x, &TD_INT);
 	CHECK(q->length == 1);
 	CHECK(is_qempty(q) == 0);
-	CHECK(*(int *)get_front(q) == 42);
-	CHECK(*(int *)get_rear(q) == 42);
+	CHECK(*(int*)get_front(q) == 42);
+	CHECK(*(int*)get_rear(q) == 42);
 	CHECK(q->head == q->tail);
 	dequeue(q);
 	CHECK(q->length == 0);
@@ -54,22 +50,26 @@ static void test_enqueue_dequeue_single(void) {
 }
 
 static void test_fifo_order(void) {
-	int a = 1, b = 2, c = 3;
+	int a=1,b=2,c=3;
 	queue *q = queue_construct();
-	enqueue(q, &a, &TD_INT);
-	enqueue(q, &b, &TD_INT);
-	enqueue(q, &c, &TD_INT);
-	CHECK(q->length == 3);
-	CHECK(*(int *)get_front(q) == 1);
-	CHECK(*(int *)get_rear(q) == 3);
 
-	CHECK(*(int *)get_front(q) == 1);
+	enqueue(q,&a,&TD_INT);
+	enqueue(q,&b,&TD_INT);
+	enqueue(q,&c,&TD_INT);
+
+	CHECK(q->length == 3);
+	CHECK(*(int*)get_front(q) == 1);
+	CHECK(*(int*)get_rear(q) == 3);
+
+	CHECK(*(int*)get_front(q) == 1);
 	dequeue(q);
-	CHECK(*(int *)get_front(q) == 2);
-	CHECK(*(int *)get_rear(q) == 3);
+	CHECK(*(int*)get_front(q) == 2);
+	CHECK(*(int*)get_rear(q) == 3);
+
 	dequeue(q);
-	CHECK(*(int *)get_front(q) == 3);
-	CHECK(*(int *)get_rear(q) == 3);
+	CHECK(*(int*)get_front(q) == 3);
+	CHECK(*(int*)get_rear(q) == 3);
+
 	dequeue(q);
 	CHECK(q->length == 0);
 	CHECK(is_qempty(q) == 1);
@@ -80,65 +80,76 @@ static void test_fifo_order(void) {
 }
 
 static void test_get_front_rear_do_not_remove(void) {
-	int a = 10, b = 20;
+	int a=10,b=20;
 	queue *q = queue_construct();
-	enqueue(q, &a, &TD_INT);
-	enqueue(q, &b, &TD_INT);
-	CHECK(*(int *)get_front(q) == 10);
-	CHECK(*(int *)get_rear(q) == 20);
-	CHECK(*(int *)get_front(q) == 10);
+	enqueue(q,&a,&TD_INT);
+	enqueue(q,&b,&TD_INT);
+
+	CHECK(*(int*)get_front(q) == 10);
+	CHECK(*(int*)get_rear(q) == 20);
+	CHECK(*(int*)get_front(q) == 10);
 	CHECK(q->length == 2);
+
 	dequeue(q);
-	CHECK(*(int *)get_front(q) == 20);
-	CHECK(*(int *)get_rear(q) == 20);
+	CHECK(*(int*)get_front(q) == 20);
+	CHECK(*(int*)get_rear(q) == 20);
+
 	queue_destruct(q);
 }
 
 static void test_enqueue_after_dequeue_all(void) {
-	int a = 1, b = 2;
+	int a=1,b=2;
 	queue *q = queue_construct();
-	enqueue(q, &a, &TD_INT);
+	enqueue(q,&a,&TD_INT);
 	dequeue(q);
-	enqueue(q, &b, &TD_INT);
+	enqueue(q,&b,&TD_INT);
 	CHECK(q->length == 1);
-	CHECK(*(int *)get_front(q) == 2);
-	CHECK(*(int *)get_rear(q) == 2);
+	CHECK(*(int*)get_front(q) == 2);
+	CHECK(*(int*)get_rear(q) == 2);
 	queue_destruct(q);
 }
 
 static void test_multiple_enqueue_dequeue(void) {
 	queue *q = queue_construct();
 	int vals[20];
-	for (int i = 0; i < 20; i++)
-		vals[i] = i;
-	for (int i = 0; i < 20; i++)
-		enqueue(q, &vals[i], &TD_INT);
+	for (int i=0;i<20;i++) vals[i] = i;
+
+	for (int i=0;i<20;i++) enqueue(q,&vals[i],&TD_INT);
 	CHECK(q->length == 20);
-	CHECK(*(int *)get_front(q) == 0);
-	CHECK(*(int *)get_rear(q) == 19);
-	for (int i = 0; i < 20; i++) {
-		CHECK(*(int *)get_front(q) == i);
+	CHECK(*(int*)get_front(q) == 0);
+	CHECK(*(int*)get_rear(q) == 19);
+
+	for (int i=0;i<20;i++) {
+		CHECK(*(int*)get_front(q) == i);
 		dequeue(q);
 	}
+
 	CHECK(q->length == 0);
 	CHECK(is_qempty(q) == 1);
+
 	queue_destruct(q);
 }
 
 static void test_head_tail_consistency(void) {
-	int a = 1, b = 2, c = 3;
+	int a=1,b=2,c=3;
 	queue *q = queue_construct();
-	enqueue(q, &a, &TD_INT);
+
+	enqueue(q,&a,&TD_INT);
 	CHECK(q->head == q->tail);
-	enqueue(q, &b, &TD_INT);
+
+	enqueue(q,&b,&TD_INT);
 	CHECK(q->head != q->tail);
 	CHECK(q->tail->next == NULL);
-	enqueue(q, &c, &TD_INT);
+
+	enqueue(q,&c,&TD_INT);
 	CHECK(q->tail->next == NULL);
+
 	dequeue(q);
 	dequeue(q);
+
 	CHECK(q->head == q->tail);
-	CHECK(*(int *)get_front(q) == 3);
+	CHECK(*(int*)get_front(q) == 3);
+
 	queue_destruct(q);
 }
 
@@ -176,6 +187,7 @@ int main(void) {
 		fprintf(stderr, "qtest: %d failure(s)\n", failures);
 		return 1;
 	}
+
 	printf("qtest: all tests passed\n");
 	return 0;
 }

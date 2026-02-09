@@ -3,7 +3,6 @@
 #ifndef CNODE_H
 #define CNODE_H
 
-#include <stdlib.h>
 #include <rvlib/td.h>
 
 typedef struct cnode cnode;
