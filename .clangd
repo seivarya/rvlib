@@ -1,7 +1,0 @@
-CompileFlags:
-  Add: [
-    -I./include,
-    -I./include/rvlib,
-    -I./src,
-    -I./src/structures
-  ]
