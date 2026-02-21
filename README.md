@@ -1,13 +1,8 @@
 <div align="center">
-
-    ### rvlib
-
-a minimal c library providing reusable data structures and utilities.
-
-    <br>
-
-    #### data structures & api
-
+  <h3>rvlib</h3>
+  a minimal c library providing reusable data structures and utilities.
+  <br>
+  <h4>data structures & api</h4>
 </div>
 
 ##### circular linked list ([clist.h](include/rvlib/clist.h))
@@ -62,33 +57,10 @@ a minimal c library providing reusable data structures and utilities.
 <br>
 
 <div align="center">
-
-    #### build instructions
-
+  <h4>build instructions</h4>
 </div>
 
-to compile everything and build the test suites, you can run the provided `makefile`.
+To compile everything and build the test suites, you can run the provided `makefile`:
 
 ```sh
 make all
-```
-
-this will output the compiled tests into the `run_tests/` directory. you can execute them directly:
-- `./run_tests/sltest`
-- `./run_tests/dltest`
-- `./run_tests/cltest`
-- `./run_tests/stktest`
-- `./run_tests/qtest`
-- `./run_tests/dict_test`
-
-to clean up object files and build directories:
-```sh
-make clean
-```
-
-<br>
-
-<div align="center">
-    i have no idea what one can do with this..
-</div>
-
