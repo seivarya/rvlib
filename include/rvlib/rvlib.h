@@ -1,5 +1,7 @@
-#ifndef GENLIB_H
-#define GENLIB_H
+/* rvlib.h: includes */
+
+#ifndef RVLIB
+#define RVLIB
 
 #include "td.h"
 #include "slist.h"
@@ -9,4 +11,4 @@
 #include "queue.h"
 #include "dict.h"
 
-#endif
+#endif /* rvlib_h */

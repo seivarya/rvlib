@@ -1,13 +1,12 @@
+/* <qnode.c>: queue node methods */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "qnode.h"
-#include <rvlib/td.h>
+#include <stdio.h>
+#include <string.h>
 
-qnode* qnode_construct(void *data, const td *type) {
+qnode *qnode_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "Fatal Error: %s: Invalid or NULL type descriptor.\n", __func__);
+		fprintf(stderr, "[qnode:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
@@ -24,7 +23,7 @@ qnode* qnode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "qnode_construct: NULL data with no copy function.\n");
+			fprintf(stderr, "[qnode:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
@@ -43,7 +42,8 @@ qnode* qnode_construct(void *data, const td *type) {
 }
 
 void qnode_destruct(qnode *node) {
-	if (!node) return;
+	if (!node)
+		return;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -53,3 +53,4 @@ void qnode_destruct(qnode *node) {
 
 	free(node);
 }
+/* <qnode.c> */

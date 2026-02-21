@@ -1,17 +1,14 @@
-/* queue.c: queue methods */
+/* <queue.c>: queue methods */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <rvlib/td.h>
 #include <rvlib/queue.h>
-
-#include "qnode/qnode.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* info: private methods */
 
 static inline int _validate_queue_ptr(queue *q) {
 	if (q == NULL) {
-		fprintf(stderr, "Error: %s: Queue pointer is NULL.\n", __func__);
+		fprintf(stderr, "[queue:validate_queue_ptr] Queue pointer is NULL.\n");
 		return 0;
 	}
 	return 1;
@@ -26,11 +23,15 @@ static inline void _validate_qnode_construction(queue *q, qnode *node) {
 
 static inline int _validate_qindex(queue *q, size_t index) {
 	if (q == NULL) {
-		fprintf(stderr, "Error: %s: Queue pointer is NULL for index validation.\n", __func__);
+		fprintf(stderr, "[queue:validate_qindex] Queue pointer is NULL for index "
+	  "validation.\n");
 		return 0;
 	}
 	if (index >= q->length) {
-		fprintf(stderr, "Error: %s: Index %zu out of bounds for queue length %zu.\n", __func__, index, q->length);
+		fprintf(stderr,
+	  "[queue:validate_qindex] Index %zu out of bounds for queue length "
+	  "%zu.\n",
+	  index, q->length);
 		return 0;
 	}
 	return 1;
@@ -38,7 +39,7 @@ static inline int _validate_qindex(queue *q, size_t index) {
 
 /* info: public methods */
 
-queue* queue_construct(void) {
+queue *queue_construct(void) {
 	queue *q = malloc(sizeof(queue));
 	if (q) {
 		q->head = NULL;
@@ -47,7 +48,7 @@ queue* queue_construct(void) {
 		return q;
 	}
 
-	fprintf(stderr, "=== error: queue_construct(): malloc failed ===\n");
+	fprintf(stderr, "[queue:construct] malloc failed\n");
 	return NULL;
 }
 
@@ -89,7 +90,8 @@ void dequeue(queue *q) {
 	if (!_validate_queue_ptr(q))
 		return;
 	if (q->length == 0) {
-		fprintf(stderr, "Error: %s: Attempted to dequeue from an empty queue.\n", __func__);
+		fprintf(stderr,
+	  "[queue:dequeue] Attempted to dequeue from an empty queue.\n");
 		return;
 	}
 
@@ -113,24 +115,27 @@ int is_qempty(queue *q) {
 	return (q->length == 0);
 }
 // TODO: changes needed here! // #1
-void* get_front(queue *q) {
+void *get_front(queue *q) {
 	if (!_validate_queue_ptr(q))
 		return NULL;
 	if (q->length == 0) {
-		fprintf(stderr, "Error: %s: Attempted to get front from an empty queue.\n", __func__);
+		fprintf(stderr,
+	  "[queue:get_front] Attempted to get front from an empty queue.\n");
 		return NULL;
 	}
 
 	return q->head->data;
 }
 
-void* get_rear(queue *q) {
+void *get_rear(queue *q) {
 	if (!_validate_queue_ptr(q))
 		return NULL;
 	if (q->length == 0) {
-		fprintf(stderr, "Error: %s: Attempted to get rear from an empty queue.\n", __func__);
+		fprintf(stderr,
+	  "[queue:get_rear] Attempted to get rear from an empty queue.\n");
 		return NULL;
 	}
 
 	return q->tail->data;
-} /* queue_c */
+}
+/* <queue.c> */

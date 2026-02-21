@@ -1,14 +1,13 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+/* <dict.c>: dictionary methods */
 
 #include <rvlib/dict.h>
-#include "entry/entry.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 static inline int _validate_dict_ptr(dict *dictionary) {
 	if (dictionary == NULL) {
-		fprintf(stderr, "Error: %s: Dictionary pointer is NULL.\n", __func__);
+		fprintf(stderr, "[dict:validate_dict_ptr] Dictionary pointer is NULL.\n");
 		return 0;
 	}
 	return 1;
@@ -16,7 +15,7 @@ static inline int _validate_dict_ptr(dict *dictionary) {
 
 static inline int _validate_key(const char *key) {
 	if (key == NULL || *key == '\0') {
-		fprintf(stderr, "Error: %s: Key is NULL or empty.\n", __func__);
+		fprintf(stderr, "[dict:validate_key] Key is NULL or empty.\n");
 		return 0;
 	}
 	return 1;
@@ -24,21 +23,22 @@ static inline int _validate_key(const char *key) {
 
 static inline void _validate_entry_construction(entry *node) {
 	if (!node) {
-		fprintf(stderr, "Error: %s: Failed to construct dictionary entry node, aborting.\n", __func__);
+		fprintf(stderr, "[dict:validate_entry_construction] Failed to construct "
+	  "dictionary entry node, aborting.\n");
 		return;
 	}
 }
 
-dict* dict_construct(unsigned long buckets) {
+dict *dict_construct(unsigned long buckets) {
 	if (buckets == 0) {
-		fprintf(stderr, "=== error: dict_construct(): buckets cannot be 0 ===\n");
+		fprintf(stderr, "[dict:construct] buckets cannot be 0\n");
 		return NULL;
 	}
 
-	dict* dictionary = malloc(sizeof(struct dict));
+	dict *dictionary = malloc(sizeof(struct dict));
 
 	if (!dictionary) {
-		fprintf(stderr, "=== error: dict_construct(): malloc failed ===\n");
+		fprintf(stderr, "[dict:construct] malloc failed\n");
 		return NULL;
 	}
 
@@ -46,11 +46,10 @@ dict* dict_construct(unsigned long buckets) {
 	dictionary->buckets = buckets;
 
 	if (!dictionary->entries) {
-		fprintf(stderr, "=== error: dict_construct(): malloc failed ===\n");
+		fprintf(stderr, "[dict:construct] malloc failed\n");
 		free(dictionary);
 		return NULL;
 	}
-
 
 	for (unsigned long int i = 0; i < buckets; i++) {
 		dictionary->entries[i] = NULL;
@@ -58,25 +57,24 @@ dict* dict_construct(unsigned long buckets) {
 	return dictionary;
 }
 
-void dict_destruct(dict* dictionary) {
+void dict_destruct(dict *dictionary) {
 	if (!_validate_dict_ptr(dictionary))
 		return;
 	if (dictionary->entries) {
 		for (unsigned long i = 0; i < dictionary->buckets; i++) {
 			entry *node = dictionary->entries[i];
-			while(node) {
+			while (node) {
 				entry *next = node->next;
 				entry_destruct(node);
 				node = next;
 			}
 		}
-
 	}
 	free(dictionary->entries);
 	free(dictionary);
 }
 
-void* dict_search(dict* dictionary, const char* key) {
+void *dict_search(dict *dictionary, const char *key) {
 	if (!_validate_dict_ptr(dictionary) || !_validate_key(key))
 		return NULL;
 
@@ -89,24 +87,25 @@ void* dict_search(dict* dictionary, const char* key) {
 		}
 		node = node->next;
 	}
-	fprintf(stderr, "Error: %s: Key '%s' not found in dictionary.\n", __func__, key);
+	fprintf(stderr, "[dict:search] Key '%s' not found in dictionary.\n", key);
 	return NULL;
 }
 
-void dict_insert(dict* dictionary, const char* key, void* value, const td *type) {
+void dict_insert(dict *dictionary, const char *key, void *value,
+		 const td *type) {
 	if (!_validate_dict_ptr(dictionary) || !_validate_key(key)) {
 		return;
 	}
 	if (value == NULL) {
-		fprintf(stderr, "Error: %s: Value pointer is NULL for key '%s'.\n", __func__, key);
+		fprintf(stderr, "[dict:insert] Value pointer is NULL for key '%s'.\n", key);
 		return;
 	}
 
 	unsigned int index = hash(dictionary, key);
 	entry *node = dictionary->entries[index];
 	/* insert at head of bucket chain */
-	while(node != NULL) {
-		if (strcmp(node->key,  key) == 0) {
+	while (node != NULL) {
+		if (strcmp(node->key, key) == 0) {
 			fprintf(stderr, "[dict:insert] duplicate key\n");
 			return;
 		}
@@ -120,7 +119,7 @@ void dict_insert(dict* dictionary, const char* key, void* value, const td *type)
 	dictionary->entries[index] = node_to_insert;
 }
 
-void dict_remove(dict* dictionary, const char* key) {
+void dict_remove(dict *dictionary, const char *key) {
 	if (!_validate_dict_ptr(dictionary) || !_validate_key(key))
 		return;
 
@@ -142,17 +141,19 @@ void dict_remove(dict* dictionary, const char* key) {
 		node = node->next;
 	}
 
-	fprintf(stderr, "Error: %s: Key '%s' not found in dictionary for removal.\n", __func__, key);
+	fprintf(stderr,
+	 "[dict:remove] Key '%s' not found in dictionary for removal.\n", key);
 }
 
-unsigned int hash(dict* dictionary, const char *key) {
+unsigned int hash(dict *dictionary, const char *key) {
 	if (!_validate_key(key))
 		return 0;
 
 	unsigned long h = 5381;
 	unsigned char c;
 	while ((c = (unsigned char)*key++)) {
-		h = ((h << 5) + h) + c; 
+		h = ((h << 5) + h) + c;
 	}
 	return (unsigned int)(h % dictionary->buckets);
-} /* dict.c */
+}
+/* <dict.c> */

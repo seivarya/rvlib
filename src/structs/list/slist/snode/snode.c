@@ -1,14 +1,13 @@
-/* snode.c: singly linked list node methods */
+/* <snode.c>: singly linked list node methods */
 
+#include "snode.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <rvlib/td.h>
-#include "snode.h"
 
-snode* snode_construct(void *data, const td *type) {
+snode *snode_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "snode_construct: invalid type descriptor\n");
+		fprintf(stderr, "[snode:construct] invalid type descriptor\n");
 		return NULL;
 	}
 
@@ -25,7 +24,7 @@ snode* snode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "snode_construct: NULL data with no copy function\n");
+			fprintf(stderr, "[snode:construct] NULL data with no copy function\n");
 			free(node);
 			return NULL;
 		}
@@ -43,7 +42,8 @@ snode* snode_construct(void *data, const td *type) {
 }
 
 void snode_destruct(snode *node) {
-	if (!node) return;
+	if (!node)
+		return;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -53,3 +53,4 @@ void snode_destruct(snode *node) {
 
 	free(node);
 }
+/* <snode.c> */

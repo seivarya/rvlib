@@ -1,14 +1,12 @@
-/* stknode.c: stack node methods */
+/* <stknode.c>: stack node methods */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <rvlib/td.h>
 #include "stknode.h"
+#include <stdio.h>
+#include <string.h>
 
-stknode* stknode_construct(void *data, const td *type) {
+stknode *stknode_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "Fatal Error: %s: Invalid or NULL type descriptor.\n", __func__);
+		fprintf(stderr, "[stknode:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
@@ -25,7 +23,7 @@ stknode* stknode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "stknode_construct: NULL data with no copy function.\n");
+			fprintf(stderr, "[stknode:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
@@ -44,7 +42,8 @@ stknode* stknode_construct(void *data, const td *type) {
 }
 
 void stknode_destruct(stknode *node) {
-	if (!node) return;
+	if (!node)
+		return;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -54,3 +53,4 @@ void stknode_destruct(stknode *node) {
 
 	free(node);
 }
+/* <stknode.c> */

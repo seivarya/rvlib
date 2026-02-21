@@ -1,17 +1,15 @@
-/* slist.c: singly linked list methods */
+/* <slist.c>: singly linked list methods */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <rvlib/td.h>
 #include <rvlib/slist.h>
-
-#include "snode/snode.h" 
+#include <stdio.h>
+#include <stdlib.h>
 
 /* info: private methods */
 
 static inline int _validate_slist_ptr(slist *list) {
 	if (list == NULL) {
-		fprintf(stderr, "Error: %s: Singly linked list pointer is NULL.\n", __func__);
+		fprintf(stderr,
+	  "[slist:validate_slist_ptr] Singly linked list pointer is NULL.\n");
 		return 0;
 	}
 	return 1;
@@ -26,18 +24,23 @@ static inline void _validate_snode_construction(slist *list, snode *node) {
 
 static inline int _validate_sindex(slist *list, size_t index) {
 	if (list == NULL) {
-		fprintf(stderr, "Error: %s: Singly linked list pointer is NULL for index validation.\n", __func__);
+		fprintf(stderr, "[slist:validate_sindex] Singly linked list pointer is "
+	  "NULL for index validation.\n");
 		return 0;
 	}
 	if (index >= list->length) {
-		fprintf(stderr, "Error: %s: Index %zu out of bounds for list length %zu.\n", __func__, index, list->length);
+		fprintf(stderr,
+	  "[slist:validate_sindex] Index %zu out of bounds for list length "
+	  "%zu.\n",
+	  index, list->length);
 		return 0;
 	}
 	return 1;
 }
 
-static snode* _slist_iterate(slist *list, size_t index) {
-	if (!_validate_sindex(list, index)) return NULL;
+static snode *_slist_iterate(slist *list, size_t index) {
+	if (!_validate_sindex(list, index))
+		return NULL;
 
 	snode *cursor = list->head;
 	for (size_t i = 0; i < index; i++)
@@ -48,19 +51,20 @@ static snode* _slist_iterate(slist *list, size_t index) {
 
 /* info: public methods */
 
-slist* slist_construct(void) {
+slist *slist_construct(void) {
 	slist *list = malloc(sizeof(slist));
 	if (list) {
 		list->head = NULL;
 		list->length = 0;
 		return list;
 	}
-	fprintf(stderr, "=== error: slist_construct(): malloc failed ===\n");
+	fprintf(stderr, "[slist:construct] malloc failed\n");
 	return NULL;
 }
 
 void slist_destruct(slist *list) {
-	if (!_validate_slist_ptr(list)) return;
+	if (!_validate_slist_ptr(list))
+		return;
 
 	/* destroy all nodes */
 	snode *current = list->head;
@@ -74,10 +78,12 @@ void slist_destruct(slist *list) {
 }
 
 void slist_insert(slist *list, size_t index, void *data, const td *type) {
-	if (!_validate_slist_ptr(list)) return;
+	if (!_validate_slist_ptr(list))
+		return;
 
 	if (index > list->length) {
-		fprintf(stderr, "Error: %s: Index %zu is out of bounds (length %zu).\n", __func__, index, list->length);
+		fprintf(stderr, "[slist:insert] Index %zu is out of bounds (length %zu).\n",
+	  index, list->length);
 		return;
 	}
 
@@ -123,12 +129,14 @@ void slist_remove(slist *list, size_t index) {
 	list->length--;
 }
 
-void* slist_fetch_node(slist *list, size_t index) {
+void *slist_fetch_node(slist *list, size_t index) {
 	if (!_validate_sindex(list, index))
 		return NULL;
 
 	snode *node = _slist_iterate(list, index);
-	if (!node) { fprintf(stderr, "Error: %s: Node not found at index %zu.\n", __func__, index); }
+	if (!node) {
+		fprintf(stderr, "[slist:fetch_node] Node not found at index %zu.\n", index);
+	}
 	return node;
 }
 
@@ -137,7 +145,8 @@ void slist_print(slist *list) {
 		return;
 
 	if (list->length == 0) {
-		fprintf(stderr, "Error: %s: Singly linked list is empty, cannot print.\n", __func__);
+		fprintf(stderr,
+	  "[slist:print] Singly linked list is empty, cannot print.\n");
 		return;
 	}
 
@@ -147,8 +156,12 @@ void slist_print(slist *list) {
 		if (type && type->print) {
 			type->print(current->data);
 		} else {
-			fprintf(stderr, "Warning: %s: No print function available for data type at node %p.\n", __func__, (void*)current);
+			fprintf(stderr,
+	   "[slist:print] No print function available for data type at node "
+	   "%p.\n",
+	   (void *)current);
 		}
 		current = current->next;
 	}
-} /* slist_c */
+}
+/* <slist.c> */

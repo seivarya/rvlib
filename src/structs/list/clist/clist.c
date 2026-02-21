@@ -1,17 +1,15 @@
-/* clist.c: circualr linked list methods */
+/* <clist.c>: circular linked list methods */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <rvlib/td.h>
 #include <rvlib/clist.h>
-
-#include "cnode/cnode.h" 
+#include <stdio.h>
+#include <stdlib.h>
 
 /* info: private methods */
 
 static inline int _validate_clist_ptr(clist *list) {
 	if (list == NULL) {
-		fprintf(stderr, "Error: %s: Circular list pointer is NULL.\n", __func__);
+		fprintf(stderr,
+	  "[clist:validate_clist_ptr] Circular list pointer is NULL.\n");
 		return 0;
 	}
 	return 1;
@@ -26,18 +24,22 @@ static inline void _validate_cnode_construction(clist *list, cnode *node) {
 
 static inline int _validate_cindex(clist *list, size_t index) {
 	if (list == NULL) {
-		fprintf(stderr, "Error: %s: Circular list pointer is NULL for index validation.\n", __func__);
+		fprintf(stderr, "[clist:validate_cindex] Circular list pointer is NULL for "
+	  "index validation.\n");
 		return 0;
 	}
 	if (index >= list->length) {
-		fprintf(stderr, "Error: %s: Index %zu out of bounds for list length %zu.\n", __func__, index, list->length);
+		fprintf(stderr,
+	  "[clist:validate_cindex] Index %zu out of bounds for list length "
+	  "%zu.\n",
+	  index, list->length);
 		return 0;
 	}
 	return 1;
 }
 
-static cnode* _clist_iterate(clist *list, size_t index) {
-	if (!_validate_cindex(list, index)) 
+static cnode *_clist_iterate(clist *list, size_t index) {
+	if (!_validate_cindex(list, index))
 		return NULL;
 
 	size_t mid_index = (list->length / 2);
@@ -46,14 +48,14 @@ static cnode* _clist_iterate(clist *list, size_t index) {
 	/* iterate */
 	if (index <= mid_index) {
 		cursor = list->head;
-		while(index != 0) {
+		while (index != 0) {
 			cursor = cursor->next;
 			index--;
 		}
 	} else {
 		cursor = list->tail;
 		size_t steps = list->length - index - 1; // index conversion
-		while(steps != 0) {
+		while (steps != 0) {
 			cursor = cursor->previous;
 			steps--;
 		}
@@ -62,20 +64,20 @@ static cnode* _clist_iterate(clist *list, size_t index) {
 	return cursor;
 }
 
-clist* clist_construct(void) {
-	clist* list = malloc(sizeof(clist));
+clist *clist_construct(void) {
+	clist *list = malloc(sizeof(clist));
 	if (list) {
-		list->head = NULL;	
+		list->head = NULL;
 		list->tail = NULL;
 		list->length = 0;
 		return list;
 	}
-	fprintf(stderr, "=== error: clist_construct(): malloc failed ===\n");
+	fprintf(stderr, "[clist:construct] malloc failed\n");
 	return NULL;
 }
 
 void clist_destruct(clist *list) {
-	if (!_validate_clist_ptr(list)) 
+	if (!_validate_clist_ptr(list))
 		return;
 
 	if (list->length == 0) {
@@ -98,7 +100,8 @@ void clist_insert(clist *list, size_t index, void *data, const td *type) {
 		return;
 
 	if (index > list->length) {
-		fprintf(stderr, "Error: %s: Index %zu is out of bounds (length %zu).\n", __func__, index, list->length);
+		fprintf(stderr, "[clist:insert] Index %zu is out of bounds (length %zu).\n",
+	  index, list->length);
 		return;
 	}
 
@@ -149,7 +152,6 @@ void clist_insert(clist *list, size_t index, void *data, const td *type) {
 	list->length++;
 }
 
-
 void clist_remove(clist *list, size_t index) {
 	if (!_validate_cindex(list, index))
 		return;
@@ -193,11 +195,14 @@ void clist_remove(clist *list, size_t index) {
 	list->length--;
 }
 
-void* clist_fetch_node(clist *list, size_t index) {
-	if (!_validate_cindex(list, index)) return NULL;
+void *clist_fetch_node(clist *list, size_t index) {
+	if (!_validate_cindex(list, index))
+		return NULL;
 
 	cnode *node = _clist_iterate(list, index);
-	if (!node) { fprintf(stderr, "Error: %s: Node not found at index %zu.\n", __func__, index); }
+	if (!node) {
+		fprintf(stderr, "[clist:fetch_node] Node not found at index %zu.\n", index);
+	}
 	return node;
 }
 
@@ -206,7 +211,7 @@ void clist_print(clist *list) {
 		return;
 
 	if (list->length == 0) {
-		fprintf(stderr, "Error: %s: Circular list is empty, cannot print.\n", __func__);
+		fprintf(stderr, "[clist:print] Circular list is empty, cannot print.\n");
 		return;
 	}
 
@@ -216,8 +221,12 @@ void clist_print(clist *list) {
 		if (type && type->print) {
 			type->print(current->data);
 		} else {
-			fprintf(stderr, "Warning: %s: No print function available for data type at node %p.\n", __func__, (void*)current);
+			fprintf(stderr,
+	   "[clist:print] No print function available for data type at node "
+	   "%p.\n",
+	   (void *)current);
 		}
 		current = current->next;
-	} while(current != list->head);
-} /* clist_c */
+	} while (current != list->head);
+}
+/* <clist.c> */

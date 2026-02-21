@@ -1,14 +1,12 @@
-/* dnode.c: doubly linked list node methods */
+/* <dnode.c>: doubly linked list node methods */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "dnode.h"
-#include <rvlib/td.h>
+#include <stdio.h>
+#include <string.h>
 
-dnode* dnode_construct(void *data, const td *type) {
+dnode *dnode_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "Fatal Error: %s: Invalid or NULL type descriptor.\n", __func__);
+		fprintf(stderr, "[dnode:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
@@ -26,7 +24,7 @@ dnode* dnode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "dnode_construct: NULL data with no copy function.\n");
+			fprintf(stderr, "[dnode:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
@@ -45,7 +43,8 @@ dnode* dnode_construct(void *data, const td *type) {
 }
 
 void dnode_destruct(dnode *node) {
-	if (!node) return;
+	if (!node)
+		return;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -54,4 +53,5 @@ void dnode_destruct(dnode *node) {
 	}
 
 	free(node);
-} /* dnode_c */
+}
+/* <dnode.c> */
