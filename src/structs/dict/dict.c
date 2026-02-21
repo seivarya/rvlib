@@ -43,9 +43,11 @@ dict* dict_construct(unsigned long buckets) {
 	}
 
 	dictionary->entries = calloc(buckets, sizeof(entry *));
+	dictionary->buckets = buckets;
 
 	if (!dictionary->entries) {
 		fprintf(stderr, "=== error: dict_construct(): malloc failed ===\n");
+		free(dictionary);
 		return NULL;
 	}
 
@@ -70,6 +72,7 @@ void dict_destruct(dict* dictionary) {
 		}
 
 	}
+	free(dictionary->entries);
 	free(dictionary);
 }
 
@@ -100,14 +103,21 @@ void dict_insert(dict* dictionary, const char* key, void* value, const td *type)
 	}
 
 	unsigned int index = hash(dictionary, key);
-	entry *node = entry_construct(key, value, type);
-	_validate_entry_construction(node);
-
+	entry *node = dictionary->entries[index];
 	/* insert at head of bucket chain */
-	//   FIX: allows duplicate keys. which can cause leaks
+	while(node != NULL) {
+		if (strcmp(node->key,  key) == 0) {
+			fprintf(stderr, "[dict:insert] duplicate key\n");
+			return;
+		}
+		node = node->next;
+	}
 
-	node->next = dictionary->entries[index];
-	dictionary->entries[index] = node;
+	entry *node_to_insert = entry_construct(key, value, type);
+	_validate_entry_construction(node_to_insert);
+
+	node_to_insert->next = dictionary->entries[index];
+	dictionary->entries[index] = node_to_insert;
 }
 
 void dict_remove(dict* dictionary, const char* key) {

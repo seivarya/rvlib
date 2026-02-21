@@ -17,43 +17,6 @@ int td_validator(const td *t) {
 	return 1;
 }
 
-void print_uint(void *data);
-void print_long(void *data);
-void print_ulong(void *data);
-void print_short(void *data);
-void print_ushort(void *data);
-void print_bool(void *data);
-void print_size_t(void *data);
-void print_str(void *data);
-void print_char(void *data);
-void print_int(void *data);
-
-size_t hash_int(void *data);
-size_t hash_str(void *data);
-size_t hash_uint(void *data);
-size_t hash_long(void *data);
-size_t hash_ulong(void *data);
-size_t hash_short(void *data);
-size_t hash_ushort(void *data);
-size_t hash_bool(void *data);
-size_t hash_size_t(void *data);
-size_t hash_char(void *data);
-
-int compare_int(void *a, void *b);
-int compare_str(void *a, void *b);
-int compare_uint(void *a, void *b);
-int compare_long(void *a, void *b);
-int compare_ulong(void *a, void *b);
-int compare_short(void *a, void *b);
-int compare_ushort(void *a, void *b);
-int compare_bool(void *a, void *b);
-int compare_size_t(void *a, void *b);
-int compare_char(void *a, void *b);
-
-
-
-/* -------------------- printing -------------------- */
-
 void print_uint(void *data)      { printf("%u\n",  *(unsigned int *)data); }
 void print_long(void *data)      { printf("%ld\n", *(long *)data); }
 void print_ulong(void *data)     { printf("%lu\n", *(unsigned long *)data); }
@@ -65,7 +28,6 @@ void print_str(void *data)       { printf("%s\n",  (char *)data); }
 void print_char(void *data)      { printf("%c\n",  *(char *)data); }
 void print_int(void *data)       { printf("%d\n",  *(int *)data); }
 
-/* -------------------- hashing -------------------- */
 
 size_t hash_int(void *data)      { return (size_t)(*(int *)data); }
 
@@ -87,8 +49,6 @@ size_t hash_ushort(void *data)   { return (size_t)(*(unsigned short *)data); }
 size_t hash_bool(void *data)     { return (size_t)(*(int *)data); }
 size_t hash_size_t(void *data)   { return *(size_t *)data; }
 size_t hash_char(void *data)     { return (size_t)(*(char *)data); }
-
-/* -------------------- comparisons -------------------- */
 
 int compare_int(void *a, void *b) {
 	int x = *(int *)a, y = *(int *)b;
@@ -138,8 +98,6 @@ int compare_char(void *a, void *b) {
 	char x = *(char *)a, y = *(char *)b;
 	return (x > y) - (x < y);
 }
-
-/* -------------------- type descriptors -------------------- */
 
 const td TD_STR = {
 	.magic    = TD_MAGIC,
