@@ -1,17 +1,15 @@
-/* dlist.c: doubly linked list methods */
+/* <dlist.c>: doubly linked list methods */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <rvlib/td.h>
 #include <rvlib/dlist.h>
-
-#include "dnode/dnode.h" 
+#include <stdio.h>
+#include <stdlib.h>
 
 /* info: private methods */
 
 static inline int _validate_dlist_ptr(dlist *list) {
 	if (list == NULL) {
-		fprintf(stderr, "Error: %s: Doubly linked list pointer is NULL.\n", __func__);
+		fprintf(stderr,
+	  "[dlist:validate_dlist_ptr] Doubly linked list pointer is NULL.\n");
 		return 0;
 	}
 	return 1;
@@ -26,18 +24,23 @@ static inline void _validate_dnode_construction(dlist *list, dnode *node) {
 
 static inline int _validate_dindex(dlist *list, size_t index) {
 	if (list == NULL) {
-		fprintf(stderr, "Error: %s: Doubly linked list pointer is NULL for index validation.\n", __func__);
+		fprintf(stderr, "[dlist:validate_dindex] Doubly linked list pointer is "
+	  "NULL for index validation.\n");
 		return 0;
 	}
 	if (index >= list->length) {
-		fprintf(stderr, "Error: %s: Index %zu out of bounds for list length %zu.\n", __func__, index, list->length);
+		fprintf(stderr,
+	  "[dlist:validate_dindex] Index %zu out of bounds for list length "
+	  "%zu.\n",
+	  index, list->length);
 		return 0;
 	}
 	return 1;
 }
 
-static dnode* _dlist_iterate(dlist *list, size_t index) {
-	if (!_validate_dindex(list, index)) return NULL;
+static dnode *_dlist_iterate(dlist *list, size_t index) {
+	if (!_validate_dindex(list, index))
+		return NULL;
 
 	size_t mid_index = list->length / 2;
 	dnode *cursor;
@@ -63,7 +66,7 @@ static dnode* _dlist_iterate(dlist *list, size_t index) {
 
 /* info: public methods */
 
-dlist* dlist_construct(void) {
+dlist *dlist_construct(void) {
 	dlist *list = malloc(sizeof(dlist));
 	if (list) {
 		list->head = NULL;
@@ -71,12 +74,13 @@ dlist* dlist_construct(void) {
 		list->length = 0;
 		return list;
 	}
-	fprintf(stderr, "=== error: dlist_construct(): malloc failed ===\n");
+	fprintf(stderr, "[dlist:construct] malloc failed\n");
 	return NULL;
 }
 
 void dlist_destruct(dlist *list) {
-	if (!_validate_dlist_ptr(list)) return;
+	if (!_validate_dlist_ptr(list))
+		return;
 
 	dnode *current = list->head;
 	while (current != NULL) {
@@ -89,10 +93,12 @@ void dlist_destruct(dlist *list) {
 }
 
 void dlist_insert(dlist *list, size_t index, void *data, const td *type) {
-	if (!_validate_dlist_ptr(list)) return;
+	if (!_validate_dlist_ptr(list))
+		return;
 
 	if (index > list->length) {
-		fprintf(stderr, "Error: %s: Index %zu is out of bounds (length %zu).\n", __func__, index, list->length);
+		fprintf(stderr, "[dlist:insert] Index %zu is out of bounds (length %zu).\n",
+	  index, list->length);
 		return;
 	}
 
@@ -132,7 +138,8 @@ void dlist_insert(dlist *list, size_t index, void *data, const td *type) {
 }
 
 void dlist_remove(dlist *list, size_t index) {
-	if (!_validate_dindex(list, index)) return;
+	if (!_validate_dindex(list, index))
+		return;
 
 	dnode *target;
 
@@ -169,19 +176,24 @@ void dlist_remove(dlist *list, size_t index) {
 	list->length--;
 }
 
-void* dlist_fetch_node(dlist *list, size_t index) {
-	if (!_validate_dindex(list, index)) return NULL;
+void *dlist_fetch_node(dlist *list, size_t index) {
+	if (!_validate_dindex(list, index))
+		return NULL;
 
 	dnode *node = _dlist_iterate(list, index);
-	if (!node) { fprintf(stderr, "Error: %s: Node not found at index %zu.\n", __func__, index); }
+	if (!node) {
+		fprintf(stderr, "[dlist:fetch_node] Node not found at index %zu.\n", index);
+	}
 	return node;
 }
 
 void dlist_print(dlist *list) {
-	if (!_validate_dlist_ptr(list)) return;
+	if (!_validate_dlist_ptr(list))
+		return;
 
 	if (list->length == 0) {
-		fprintf(stderr, "Error: %s: Doubly linked list is empty, cannot print.\n", __func__);
+		fprintf(stderr,
+	  "[dlist:print] Doubly linked list is empty, cannot print.\n");
 		return;
 	}
 
@@ -191,8 +203,12 @@ void dlist_print(dlist *list) {
 		if (type && type->print) {
 			type->print(current->data);
 		} else {
-			fprintf(stderr, "Warning: %s: No print function available for data type at node %p.\n", __func__, (void*)current);
+			fprintf(stderr,
+	   "[dlist:print] No print function available for data type at node "
+	   "%p.\n",
+	   (void *)current);
 		}
 		current = current->next;
 	}
-} /* dlist_c */
+}
+/* <dlist.c> */

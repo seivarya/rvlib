@@ -1,14 +1,13 @@
-/* cnode.c: circular linked list node methods */
+/* <cnode.c>: circular linked list node methods */
 
+#include "cnode.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cnode.h"
-#include <rvlib/td.h>
 
-cnode* cnode_construct(void *data, const td *type) {
+cnode *cnode_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "Fatal Error: %s: Invalid or NULL type descriptor.\n", __func__);
+		fprintf(stderr, "[cnode:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
@@ -26,7 +25,7 @@ cnode* cnode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "cnode_construct: NULL data with no copy function.\n");
+			fprintf(stderr, "[cnode:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
@@ -45,7 +44,8 @@ cnode* cnode_construct(void *data, const td *type) {
 }
 
 void cnode_destruct(cnode *node) {
-	if (!node) return;
+	if (!node)
+		return;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -54,4 +54,5 @@ void cnode_destruct(cnode *node) {
 	}
 
 	free(node);
-} /* cnode_c */
+}
+/* <cnode.c> */

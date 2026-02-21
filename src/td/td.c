@@ -1,3 +1,4 @@
+/* <td.c>: type descriptor methods */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,30 +7,34 @@
 
 int td_validator(const td *t) {
 	if (t == NULL) {
-		fprintf(stderr, "error: %s: null type descriptor provided for validation.\n", __func__);
+		fprintf(stderr,
+	  "[td:validator] null type descriptor provided for validation.\n");
 		return 0;
 	}
 	if (t->magic != TD_MAGIC) {
-		fprintf(stderr, "error: %s: type descriptor magic mismatch. expected 0x%X, got 0x%X.\n",
-	  __func__, TD_MAGIC, t->magic);
+		fprintf(stderr,
+	  "[td:validator] type descriptor magic mismatch. expected 0x%X, got "
+	  "0x%X.\n",
+	  TD_MAGIC, t->magic);
 		return 0;
 	}
 	return 1;
 }
 
-void print_uint(void *data)      { printf("%u\n",  *(unsigned int *)data); }
-void print_long(void *data)      { printf("%ld\n", *(long *)data); }
-void print_ulong(void *data)     { printf("%lu\n", *(unsigned long *)data); }
-void print_short(void *data)     { printf("%hd\n", *(short *)data); }
-void print_ushort(void *data)    { printf("%hu\n", *(unsigned short *)data); }
-void print_bool(void *data)      { printf("%s\n", (*(int*)data) ? "true" : "false"); }
-void print_size_t(void *data)    { printf("%zu\n", *(size_t *)data); }
-void print_str(void *data)       { printf("%s\n",  (char *)data); }
-void print_char(void *data)      { printf("%c\n",  *(char *)data); }
-void print_int(void *data)       { printf("%d\n",  *(int *)data); }
+void print_uint(void *data) { printf("%u\n", *(unsigned int *)data); }
+void print_long(void *data) { printf("%ld\n", *(long *)data); }
+void print_ulong(void *data) { printf("%lu\n", *(unsigned long *)data); }
+void print_short(void *data) { printf("%hd\n", *(short *)data); }
+void print_ushort(void *data) { printf("%hu\n", *(unsigned short *)data); }
+void print_bool(void *data) {
+	printf("%s\n", (*(int *)data) ? "true" : "false");
+}
+void print_size_t(void *data) { printf("%zu\n", *(size_t *)data); }
+void print_str(void *data) { printf("%s\n", (char *)data); }
+void print_char(void *data) { printf("%c\n", *(char *)data); }
+void print_int(void *data) { printf("%d\n", *(int *)data); }
 
-
-size_t hash_int(void *data)      { return (size_t)(*(int *)data); }
+size_t hash_int(void *data) { return (size_t)(*(int *)data); }
 
 /* simple djb2 string hash */
 size_t hash_str(void *data) {
@@ -41,23 +46,21 @@ size_t hash_str(void *data) {
 	return (size_t)h;
 }
 
-size_t hash_uint(void *data)     { return (size_t)(*(unsigned int *)data); }
-size_t hash_long(void *data)     { return (size_t)(*(long *)data); }
-size_t hash_ulong(void *data)    { return (size_t)(*(unsigned long *)data); }
-size_t hash_short(void *data)    { return (size_t)(*(short *)data); }
-size_t hash_ushort(void *data)   { return (size_t)(*(unsigned short *)data); }
-size_t hash_bool(void *data)     { return (size_t)(*(int *)data); }
-size_t hash_size_t(void *data)   { return *(size_t *)data; }
-size_t hash_char(void *data)     { return (size_t)(*(char *)data); }
+size_t hash_uint(void *data) { return (size_t)(*(unsigned int *)data); }
+size_t hash_long(void *data) { return (size_t)(*(long *)data); }
+size_t hash_ulong(void *data) { return (size_t)(*(unsigned long *)data); }
+size_t hash_short(void *data) { return (size_t)(*(short *)data); }
+size_t hash_ushort(void *data) { return (size_t)(*(unsigned short *)data); }
+size_t hash_bool(void *data) { return (size_t)(*(int *)data); }
+size_t hash_size_t(void *data) { return *(size_t *)data; }
+size_t hash_char(void *data) { return (size_t)(*(char *)data); }
 
 int compare_int(void *a, void *b) {
 	int x = *(int *)a, y = *(int *)b;
 	return x - y;
 }
 
-int compare_str(void *a, void *b) {
-	return strcmp((char *)a, (char *)b);
-}
+int compare_str(void *a, void *b) { return strcmp((char *)a, (char *)b); }
 
 int compare_uint(void *a, void *b) {
 	unsigned int x = *(unsigned int *)a, y = *(unsigned int *)b;
@@ -99,102 +102,83 @@ int compare_char(void *a, void *b) {
 	return (x > y) - (x < y);
 }
 
-const td TD_STR = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(char *),
-	.print    = print_str,
-	.hash     = hash_str,
-	.compare  = compare_str,
+const td TD_STR = {.magic = TD_MAGIC,
+	.size = sizeof(char *),
+	.print = print_str,
+	.hash = hash_str,
+	.compare = compare_str,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_INT = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(int),
-	.print    = print_int,
-	.hash     = hash_int,
-	.compare  = compare_int,
+const td TD_INT = {.magic = TD_MAGIC,
+	.size = sizeof(int),
+	.print = print_int,
+	.hash = hash_int,
+	.compare = compare_int,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_UINT = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(unsigned int),
-	.print    = print_uint,
-	.hash     = hash_uint,
-	.compare  = compare_uint,
+const td TD_UINT = {.magic = TD_MAGIC,
+	.size = sizeof(unsigned int),
+	.print = print_uint,
+	.hash = hash_uint,
+	.compare = compare_uint,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_LONG = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(long),
-	.print    = print_long,
-	.hash     = hash_long,
-	.compare  = compare_long,
+const td TD_LONG = {.magic = TD_MAGIC,
+	.size = sizeof(long),
+	.print = print_long,
+	.hash = hash_long,
+	.compare = compare_long,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_ULONG = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(unsigned long),
-	.print    = print_ulong,
-	.hash     = hash_ulong,
-	.compare  = compare_ulong,
+const td TD_ULONG = {.magic = TD_MAGIC,
+	.size = sizeof(unsigned long),
+	.print = print_ulong,
+	.hash = hash_ulong,
+	.compare = compare_ulong,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_SHORT = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(short),
-	.print    = print_short,
-	.hash     = hash_short,
-	.compare  = compare_short,
+const td TD_SHORT = {.magic = TD_MAGIC,
+	.size = sizeof(short),
+	.print = print_short,
+	.hash = hash_short,
+	.compare = compare_short,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_USHORT = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(unsigned short),
-	.print    = print_ushort,
-	.hash     = hash_ushort,
-	.compare  = compare_ushort,
+const td TD_USHORT = {.magic = TD_MAGIC,
+	.size = sizeof(unsigned short),
+	.print = print_ushort,
+	.hash = hash_ushort,
+	.compare = compare_ushort,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_BOOL = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(int),
-	.print    = print_bool,
-	.hash     = hash_bool,
-	.compare  = compare_bool,
+const td TD_BOOL = {.magic = TD_MAGIC,
+	.size = sizeof(int),
+	.print = print_bool,
+	.hash = hash_bool,
+	.compare = compare_bool,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_SIZE_T = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(size_t),
-	.print    = print_size_t,
-	.hash     = hash_size_t,
-	.compare  = compare_size_t,
+const td TD_SIZE_T = {.magic = TD_MAGIC,
+	.size = sizeof(size_t),
+	.print = print_size_t,
+	.hash = hash_size_t,
+	.compare = compare_size_t,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
 
-const td TD_CHAR = {
-	.magic    = TD_MAGIC,
-	.size     = sizeof(char),
-	.print    = print_char,
-	.hash     = hash_char,
-	.compare  = compare_char,
+const td TD_CHAR = {.magic = TD_MAGIC,
+	.size = sizeof(char),
+	.print = print_char,
+	.hash = hash_char,
+	.compare = compare_char,
 	.copy = NULL,
-	.destruct = NULL
-};
+	.destruct = NULL};
+/* <td.c> */

@@ -1,17 +1,14 @@
-/* stack.c: stack methods */
+/* <stack.c>: stack methods */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <rvlib/td.h>
 #include <rvlib/stack.h>
-
-#include "stknode/stknode.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* info: private methods */
 
 static inline int _validate_stack_ptr(stack *stk) {
 	if (stk == NULL) {
-		fprintf(stderr, "Error: %s: Stack pointer is NULL.\n", __func__);
+		fprintf(stderr, "[stack:validate_stack_ptr] Stack pointer is NULL.\n");
 		return 0;
 	}
 	return 1;
@@ -26,11 +23,15 @@ static inline void _validate_stknode_construction(stack *stk, stknode *node) {
 
 static inline int _validate_stindex(stack *stk, size_t index) {
 	if (stk == NULL) {
-		fprintf(stderr, "Error: %s: Stack pointer is NULL for index validation.\n", __func__);
+		fprintf(stderr, "[stack:validate_stindex] Stack pointer is NULL for index "
+	  "validation.\n");
 		return 0;
 	}
 	if (index >= stk->length) {
-		fprintf(stderr, "Error: %s: Index %zu out of bounds for stack length %zu.\n", __func__, index, stk->length);
+		fprintf(stderr,
+	  "[stack:validate_stindex] Index %zu out of bounds for stack length "
+	  "%zu.\n",
+	  index, stk->length);
 		return 0;
 	}
 	return 1;
@@ -38,7 +39,7 @@ static inline int _validate_stindex(stack *stk, size_t index) {
 
 /* info: public methods */
 
-stack* stack_construct(void) {
+stack *stack_construct(void) {
 	stack *stk = malloc(sizeof(stack));
 	if (stk) {
 		stk->head = NULL;
@@ -46,7 +47,7 @@ stack* stack_construct(void) {
 		return stk;
 	}
 
-	fprintf(stderr, "=== error: stack_construct(): malloc failed ===\n");
+	fprintf(stderr, "[stack:construct] malloc failed\n");
 	return NULL;
 }
 
@@ -87,7 +88,7 @@ void pop(stack *stk) {
 	if (!_validate_stack_ptr(stk))
 		return;
 	if (stk->length == 0) {
-		fprintf(stderr, "Error: %s: Attempted to pop from an empty stack.\n", __func__);
+		fprintf(stderr, "[stack:pop] Attempted to pop from an empty stack.\n");
 		return;
 	}
 
@@ -111,13 +112,14 @@ int is_empty(stack *stk) {
 	return stk->length == 0;
 }
 
-void* peek(stack *stk) {
+void *peek(stack *stk) {
 	if (!_validate_stack_ptr(stk))
 		return NULL;
 	if (stk->length == 0) {
-		fprintf(stderr, "Error: %s: Attempted to peek from an empty stack.\n", __func__);
+		fprintf(stderr, "[stack:peek] Attempted to peek from an empty stack.\n");
 		return NULL;
 	}
 
 	return stk->head->data;
-} /* stack_c */
+}
+/* <stack.c> */

@@ -1,3 +1,5 @@
+/* queue.h: queue header files */
+
 #ifndef QUEUE_H
 #define QUEUE_H
 

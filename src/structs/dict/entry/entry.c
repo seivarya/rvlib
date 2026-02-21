@@ -1,14 +1,13 @@
+/* <entry.c>: dictionary entry methods */
+
+#include "entry.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <rvlib/td.h>
 
-#include "entry.h"
-
-
-entry* entry_construct(const char* key, void* value, const td *type) {
+entry *entry_construct(const char *key, void *value, const td *type) {
 	if (!key) {
-		fprintf(stderr, "entry_construct: key cannot be NULL\n");
+		fprintf(stderr, "[entry:construct] key cannot be NULL\n");
 		return NULL;
 	}
 
@@ -19,7 +18,7 @@ entry* entry_construct(const char* key, void* value, const td *type) {
 	}
 
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "entry_construct: invalid type descriptor\n");
+		fprintf(stderr, "[entry:construct] invalid type descriptor\n");
 		free(node);
 		return NULL;
 	}
@@ -52,7 +51,8 @@ entry* entry_construct(const char* key, void* value, const td *type) {
 }
 
 void entry_destruct(entry *node) {
-	if (!node) return;
+	if (!node)
+		return;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->value);
@@ -63,3 +63,4 @@ void entry_destruct(entry *node) {
 	free(node->key);
 	free(node);
 }
+/* <entry.c> */

@@ -1,3 +1,5 @@
+/* td.h: type descriptors */
+
 #ifndef TD_H
 #define TD_H
 

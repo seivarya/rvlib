@@ -1,4 +1,5 @@
-/* dict.h: */
+/* dict.h: dictionary header file  */
+
 #ifndef DICT_H
 #define DICT_H
 
@@ -19,4 +20,4 @@ void dict_remove(dict*dictionary, const char* key);
 
 unsigned int hash(dict* dictionary, const char *key);
 
-#endif
+#endif /* dict_h */
