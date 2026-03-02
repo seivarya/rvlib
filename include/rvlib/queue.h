@@ -13,7 +13,7 @@ typedef struct queue {
 } queue;
 	
 queue* queue_construct(void);
-void queue_destruct(struct queue *q);
+void queue_destruct(queue *q);
 
 void enqueue(queue *q, void *data, const td *type);
 void dequeue(queue *q);

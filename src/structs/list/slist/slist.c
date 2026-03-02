@@ -96,7 +96,7 @@ void slist_insert(slist *list, size_t index, void *data, const td *type) {
 		list->head = new_node;
 	}
 
-	/* insert at middle or end */
+/* insert at middle or end */
 	else {
 		snode *previous = _slist_iterate(list, index - 1);
 		new_node->next = previous->next;
