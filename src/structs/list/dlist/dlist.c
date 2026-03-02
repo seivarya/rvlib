@@ -60,7 +60,6 @@ static dnode *_dlist_iterate(dlist *list, size_t index) {
 			steps--;
 		}
 	}
-
 	return cursor;
 }
 
