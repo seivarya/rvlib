@@ -13,7 +13,7 @@ static int failures = 0;
 	} \
 } while (0)
 
-#define NODE_AT(list, i) ((snode*)slist_fetch_node((list), (i)))
+#define NODE_AT(list, i) ((slist_node*)slist_fetch_node((list), (i)))
 #define INT_AT(list, i) (*(int*)NODE_AT((list), (i))->data)
 
 /* ---------------------- TESTS ---------------------- */

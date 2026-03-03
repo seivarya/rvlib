@@ -15,7 +15,7 @@ static inline int _validate_clist_ptr(clist *list) {
 	return 1;
 }
 
-static inline void _validate_cnode_construction(clist *list, cnode *node) {
+static inline void _validate_clist_node_construction(clist *list, clist_node *node) {
 	if (!node) {
 		clist_destruct(list);
 		exit(3);
@@ -38,12 +38,12 @@ static inline int _validate_cindex(clist *list, size_t index) {
 	return 1;
 }
 
-static cnode *_clist_iterate(clist *list, size_t index) {
+static clist_node *_clist_iterate(clist *list, size_t index) {
 	if (!_validate_cindex(list, index))
 		return NULL;
 
 	size_t mid_index = (list->length / 2);
-	cnode *cursor;
+	clist_node *cursor;
 
 	/* iterate */
 	if (index <= mid_index) {
@@ -85,11 +85,11 @@ void clist_destruct(clist *list) {
 		return;
 	}
 
-	cnode *current = list->head;
-	cnode *head = list->head;
+	clist_node *current = list->head;
+	clist_node *head = list->head;
 	do {
-		cnode *next = current->next;
-		cnode_destruct(current);
+		clist_node *next = current->next;
+		clist_node_destruct(current);
 		current = next;
 	} while (current != head);
 	free(list);
@@ -105,8 +105,8 @@ void clist_insert(clist *list, size_t index, void *data, const td *type) {
 		return;
 	}
 
-	cnode *new_node = cnode_construct(data, type);
-	_validate_cnode_construction(list, new_node);
+	clist_node *new_node = clist_node_construct(data, type);
+	_validate_clist_node_construction(list, new_node);
 
 	/* case 1: insert at head */
 	if (index == 0) {
@@ -140,7 +140,7 @@ void clist_insert(clist *list, size_t index, void *data, const td *type) {
 
 	/* case 3: insert at middle */
 	else {
-		cnode *on_index_node = _clist_iterate(list, index);
+		clist_node *on_index_node = _clist_iterate(list, index);
 
 		new_node->previous = on_index_node->previous;
 		new_node->next = on_index_node;
@@ -156,7 +156,7 @@ void clist_remove(clist *list, size_t index) {
 	if (!_validate_cindex(list, index))
 		return;
 
-	cnode *target;
+	clist_node *target;
 
 	/* case 1: removing the head */
 	if (index == 0) {
@@ -191,7 +191,7 @@ void clist_remove(clist *list, size_t index) {
 		target->next->previous = target->previous;
 	}
 
-	cnode_destruct(target);
+	clist_node_destruct(target);
 	list->length--;
 }
 
@@ -199,7 +199,7 @@ void *clist_fetch_node(clist *list, size_t index) {
 	if (!_validate_cindex(list, index))
 		return NULL;
 
-	cnode *node = _clist_iterate(list, index);
+	clist_node *node = _clist_iterate(list, index);
 	if (!node) {
 		fprintf(stderr, "[clist:fetch_node] Node not found at index %zu.\n", index);
 	}
@@ -215,7 +215,7 @@ void clist_print(clist *list) {
 		return;
 	}
 
-	cnode *current = list->head;
+	clist_node *current = list->head;
 	do {
 		const td *type = current->type;
 		if (type && type->print) {

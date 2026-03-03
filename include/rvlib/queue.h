@@ -4,11 +4,11 @@
 #define QUEUE_H
 
 #include "td.h"
-#include "queue/qnode/qnode.h"
+#include "queue/queue_node/queue_node.h"
 
 typedef struct queue {
-	qnode *head;
-	qnode *tail;
+	queue_node *head;
+	queue_node *tail;
 	size_t length;
 } queue;
 	

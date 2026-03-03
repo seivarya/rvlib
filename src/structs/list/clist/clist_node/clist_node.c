@@ -1,19 +1,19 @@
-/* <cnode.c>: circular linked list node methods */
+/* <clist_node.c>: circular linked list node methods */
 
-#include "cnode.h"
+#include "clist_node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-cnode *cnode_construct(void *data, const td *type) {
+clist_node *clist_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[cnode:construct] Invalid or NULL type descriptor.\n");
+		fprintf(stderr, "[clist_node:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
-	cnode *node = malloc(sizeof(cnode));
+	clist_node *node = malloc(sizeof(clist_node));
 	if (!node) {
-		perror("malloc failed: cnode_construct");
+		perror("malloc failed: clist_node_construct");
 		return NULL;
 	}
 
@@ -25,14 +25,14 @@ cnode *cnode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[cnode:construct] NULL data with no copy function.\n");
+			fprintf(stderr, "[clist_node:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
 
 		node->data = malloc(type->size);
 		if (!node->data) {
-			perror("malloc failed for data in cnode_construct");
+			perror("malloc failed for data in clist_node_construct");
 			free(node);
 			return NULL;
 		}
@@ -43,7 +43,7 @@ cnode *cnode_construct(void *data, const td *type) {
 	return node;
 }
 
-void cnode_destruct(cnode *node) {
+void clist_node_destruct(clist_node *node) {
 	if (!node)
 		return;
 
@@ -55,4 +55,4 @@ void cnode_destruct(cnode *node) {
 
 	free(node);
 }
-/* <cnode.c> */
+/* <clist_node.c> */

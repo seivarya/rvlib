@@ -4,10 +4,10 @@
 #define SLIST_H
 
 #include "td.h"
-#include "list/slist/snode/snode.h"
+#include "list/slist/slist_node/slist_node.h"
 
 typedef struct slist {
-	snode *head;
+	slist_node *head;
 	size_t length;
 } slist;
 

@@ -4,11 +4,11 @@
 #define DICT_H
 
 #define HASH_SIZE 100
-#include "dict/entry/entry.h"
+#include "dict/dict_entry/dict_entry.h"
 
 typedef struct dict {
 	unsigned long buckets;
-	entry **entries; // each arr element will have entry *
+	dict_entry **entries; // each arr element will have dict_entry *
 } dict;
 
 dict* dict_construct(unsigned long buckets);

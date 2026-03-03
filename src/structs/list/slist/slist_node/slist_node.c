@@ -1,18 +1,19 @@
-/* <stknode.c>: stack node methods */
+/* <slist_node.c>: singly linked list node methods */
 
-#include "stknode.h"
+#include "slist_node.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-stknode *stknode_construct(void *data, const td *type) {
+slist_node *slist_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[stknode:construct] Invalid or NULL type descriptor.\n");
+		fprintf(stderr, "[slist_node:construct] invalid type descriptor\n");
 		return NULL;
 	}
 
-	stknode *node = malloc(sizeof(stknode));
+	slist_node *node = malloc(sizeof(slist_node));
 	if (!node) {
-		perror("malloc failed: stknode_construct");
+		perror("malloc failed: slist_node_construct");
 		return NULL;
 	}
 
@@ -23,25 +24,24 @@ stknode *stknode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[stknode:construct] NULL data with no copy function.\n");
+			fprintf(stderr, "[slist_node:construct] NULL data with no copy function\n");
 			free(node);
 			return NULL;
 		}
 
 		node->data = malloc(type->size);
 		if (!node->data) {
-			perror("malloc failed for data in stknode_construct");
+			perror("malloc failed for data in slist_node_construct");
 			free(node);
 			return NULL;
 		}
-
 		memcpy(node->data, data, type->size);
 	}
 
 	return node;
 }
 
-void stknode_destruct(stknode *node) {
+void slist_node_destruct(slist_node *node) {
 	if (!node)
 		return;
 
@@ -53,4 +53,4 @@ void stknode_destruct(stknode *node) {
 
 	free(node);
 }
-/* <stknode.c> */
+/* <slist_node.c> */

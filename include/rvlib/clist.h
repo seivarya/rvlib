@@ -4,11 +4,11 @@
 #define CLIST_H
 
 #include "td.h"
-#include "list/clist/cnode/cnode.h"
+#include "list/clist/clist_node/clist_node.h"
 
 typedef struct clist {
-	cnode *head;
-	cnode *tail;
+	clist_node *head;
+	clist_node *tail;
 	size_t length;
 } clist;
 

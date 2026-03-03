@@ -15,7 +15,7 @@ static inline int _validate_slist_ptr(slist *list) {
 	return 1;
 }
 
-static inline void _validate_snode_construction(slist *list, snode *node) {
+static inline void _validate_slist_node_construction(slist *list, slist_node *node) {
 	if (!node) {
 		slist_destruct(list);
 		exit(3);
@@ -38,11 +38,11 @@ static inline int _validate_sindex(slist *list, size_t index) {
 	return 1;
 }
 
-static snode *_slist_iterate(slist *list, size_t index) {
+static slist_node *_slist_iterate(slist *list, size_t index) {
 	if (!_validate_sindex(list, index))
 		return NULL;
 
-	snode *cursor = list->head;
+	slist_node *cursor = list->head;
 	for (size_t i = 0; i < index; i++)
 		cursor = cursor->next;
 
@@ -67,10 +67,10 @@ void slist_destruct(slist *list) {
 		return;
 
 	/* destroy all nodes */
-	snode *current = list->head;
+	slist_node *current = list->head;
 	while (current != NULL) {
-		snode *next = current->next;
-		snode_destruct(current);
+		slist_node *next = current->next;
+		slist_node_destruct(current);
 		current = next;
 	}
 
@@ -87,8 +87,8 @@ void slist_insert(slist *list, size_t index, void *data, const td *type) {
 		return;
 	}
 
-	snode *new_node = snode_construct(data, type);
-	_validate_snode_construction(list, new_node);
+	slist_node *new_node = slist_node_construct(data, type);
+	_validate_slist_node_construction(list, new_node);
 
 	/* insert at head */
 	if (index == 0) {
@@ -98,7 +98,7 @@ void slist_insert(slist *list, size_t index, void *data, const td *type) {
 
 /* insert at middle or end */
 	else {
-		snode *previous = _slist_iterate(list, index - 1);
+		slist_node *previous = _slist_iterate(list, index - 1);
 		new_node->next = previous->next;
 		previous->next = new_node;
 	}
@@ -110,7 +110,7 @@ void slist_remove(slist *list, size_t index) {
 	if (!_validate_sindex(list, index))
 		return;
 
-	snode *target;
+	slist_node *target;
 
 	/* remove head */
 	if (index == 0) {
@@ -120,12 +120,12 @@ void slist_remove(slist *list, size_t index) {
 
 	/* remove middle/end */
 	else {
-		snode *previous = _slist_iterate(list, index - 1);
+		slist_node *previous = _slist_iterate(list, index - 1);
 		target = previous->next;
 		previous->next = target->next;
 	}
 
-	snode_destruct(target);
+	slist_node_destruct(target);
 	list->length--;
 }
 
@@ -133,7 +133,7 @@ void *slist_fetch_node(slist *list, size_t index) {
 	if (!_validate_sindex(list, index))
 		return NULL;
 
-	snode *node = _slist_iterate(list, index);
+	slist_node *node = _slist_iterate(list, index);
 	if (!node) {
 		fprintf(stderr, "[slist:fetch_node] Node not found at index %zu.\n", index);
 	}
@@ -150,7 +150,7 @@ void slist_print(slist *list) {
 		return;
 	}
 
-	snode *current = list->head;
+	slist_node *current = list->head;
 	while (current != NULL) {
 		const td *type = current->type;
 		if (type && type->print) {

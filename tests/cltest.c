@@ -11,8 +11,8 @@ static int failures = 0;
 	} \
 } while (0)
 
-#define CNODE_AT(list,i) ((cnode*)clist_fetch_node((list),(i)))
-#define INT_AT(list,i) (*(int*)CNODE_AT((list),(i))->data)
+#define CLIST_NODE_AT(list,i) ((clist_node*)clist_fetch_node((list),(i)))
+#define INT_AT(list,i) (*(int*)CLIST_NODE_AT((list),(i))->data)
 
 static void test_construct_destruct(void) {
 	clist *list = clist_construct();
@@ -198,9 +198,9 @@ static void test_circular_links(void) {
 	clist_insert(list,1,&b,&TD_INT);
 	clist_insert(list,2,&c,&TD_INT);
 
-	cnode *n0 = CNODE_AT(list,0);
-	cnode *n1 = CNODE_AT(list,1);
-	cnode *n2 = CNODE_AT(list,2);
+	clist_node *n0 = CLIST_NODE_AT(list,0);
+	clist_node *n1 = CLIST_NODE_AT(list,1);
+	clist_node *n2 = CLIST_NODE_AT(list,2);
 
 	CHECK(n0->previous == n2);
 	CHECK(n0->next == n1);

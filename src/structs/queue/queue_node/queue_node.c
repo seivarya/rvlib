@@ -1,37 +1,36 @@
-/* <dnode.c>: doubly linked list node methods */
+/* <queue_node.c>: queue node methods */
 
-#include "dnode.h"
+#include "queue_node.h"
 #include <stdio.h>
 #include <string.h>
 
-dnode *dnode_construct(void *data, const td *type) {
+queue_node *queue_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[dnode:construct] Invalid or NULL type descriptor.\n");
+		fprintf(stderr, "[queue_node:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
-	dnode *node = malloc(sizeof(dnode));
+	queue_node *node = malloc(sizeof(queue_node));
 	if (!node) {
-		perror("malloc failed: dnode_construct");
+		perror("malloc failed: queue_node_construct");
 		return NULL;
 	}
 
 	node->type = type;
 	node->next = NULL;
-	node->previous = NULL;
 
 	if (type->copy) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[dnode:construct] NULL data with no copy function.\n");
+			fprintf(stderr, "[queue_node:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
 
 		node->data = malloc(type->size);
 		if (!node->data) {
-			perror("malloc failed for data in dnode_construct");
+			perror("malloc failed for data in queue_node_construct");
 			free(node);
 			return NULL;
 		}
@@ -42,7 +41,7 @@ dnode *dnode_construct(void *data, const td *type) {
 	return node;
 }
 
-void dnode_destruct(dnode *node) {
+void queue_node_destruct(queue_node *node) {
 	if (!node)
 		return;
 
@@ -54,4 +53,4 @@ void dnode_destruct(dnode *node) {
 
 	free(node);
 }
-/* <dnode.c> */
+/* <queue_node.c> */

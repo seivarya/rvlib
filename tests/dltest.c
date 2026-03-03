@@ -10,8 +10,8 @@ static int failures = 0;
 	} \
 } while (0)
 
-#define DNODE_AT(list,i) ((dnode*)dlist_fetch_node((list),(i)))
-#define INT_AT(list,i) (*(int*)DNODE_AT((list),(i))->data)
+#define DLIST_NODE_AT(list,i) ((dlist_node*)dlist_fetch_node((list),(i)))
+#define INT_AT(list,i) (*(int*)DLIST_NODE_AT((list),(i))->data)
 
 static void test_construct_destruct(void) {
 	dlist *list = dlist_construct();
@@ -97,7 +97,7 @@ static void test_remove_head(void) {
 
 	dlist_remove(list,0);
 	CHECK(list->length == 2);
-	CHECK(DNODE_AT(list,0)->previous == NULL);
+	CHECK(DLIST_NODE_AT(list,0)->previous == NULL);
 	CHECK(INT_AT(list,0) == 2);
 	CHECK(INT_AT(list,1) == 3);
 
@@ -124,7 +124,7 @@ static void test_remove_tail(void) {
 
 	dlist_remove(list,2);
 	CHECK(list->length == 2);
-	CHECK(DNODE_AT(list,1)->next == NULL);
+	CHECK(DLIST_NODE_AT(list,1)->next == NULL);
 	CHECK(INT_AT(list,0) == 1);
 	CHECK(INT_AT(list,1) == 2);
 
@@ -194,9 +194,9 @@ static void test_forward_backward_links(void) {
 	dlist_insert(list,1,&b,&TD_INT);
 	dlist_insert(list,2,&c,&TD_INT);
 
-	dnode *n0 = DNODE_AT(list,0);
-	dnode *n1 = DNODE_AT(list,1);
-	dnode *n2 = DNODE_AT(list,2);
+	dlist_node *n0 = DLIST_NODE_AT(list,0);
+	dlist_node *n1 = DLIST_NODE_AT(list,1);
+	dlist_node *n2 = DLIST_NODE_AT(list,2);
 
 	CHECK(n0->previous == NULL);
 	CHECK(n0->next == n1);

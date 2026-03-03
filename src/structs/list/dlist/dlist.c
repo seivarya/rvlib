@@ -15,7 +15,7 @@ static inline int _validate_dlist_ptr(dlist *list) {
 	return 1;
 }
 
-static inline void _validate_dnode_construction(dlist *list, dnode *node) {
+static inline void _validate_dlist_node_construction(dlist *list, dlist_node *node) {
 	if (!node) {
 		dlist_destruct(list);
 		exit(3);
@@ -38,12 +38,12 @@ static inline int _validate_dindex(dlist *list, size_t index) {
 	return 1;
 }
 
-static dnode *_dlist_iterate(dlist *list, size_t index) {
+static dlist_node *_dlist_iterate(dlist *list, size_t index) {
 	if (!_validate_dindex(list, index))
 		return NULL;
 
 	size_t mid_index = list->length / 2;
-	dnode *cursor;
+	dlist_node *cursor;
 
 	/* iterate: optimized */
 	if (index <= mid_index) {
@@ -81,10 +81,10 @@ void dlist_destruct(dlist *list) {
 	if (!_validate_dlist_ptr(list))
 		return;
 
-	dnode *current = list->head;
+	dlist_node *current = list->head;
 	while (current != NULL) {
-		dnode *next = current->next;
-		dnode_destruct(current);
+		dlist_node *next = current->next;
+		dlist_node_destruct(current);
 		current = next;
 	}
 
@@ -101,8 +101,8 @@ void dlist_insert(dlist *list, size_t index, void *data, const td *type) {
 		return;
 	}
 
-	dnode *new_node = dnode_construct(data, type);
-	_validate_dnode_construction(list, new_node);
+	dlist_node *new_node = dlist_node_construct(data, type);
+	_validate_dlist_node_construction(list, new_node);
 
 	/* case 1: insert at head */
 	if (index == 0) {
@@ -125,7 +125,7 @@ void dlist_insert(dlist *list, size_t index, void *data, const td *type) {
 
 	/* case 3: insert in the middle */
 	else {
-		dnode *on_index_node = _dlist_iterate(list, index);
+		dlist_node *on_index_node = _dlist_iterate(list, index);
 		new_node->previous = on_index_node->previous;
 		new_node->next = on_index_node;
 
@@ -140,7 +140,7 @@ void dlist_remove(dlist *list, size_t index) {
 	if (!_validate_dindex(list, index))
 		return;
 
-	dnode *target;
+	dlist_node *target;
 
 	/* case 1: removing the head */
 	if (index == 0) {
@@ -171,7 +171,7 @@ void dlist_remove(dlist *list, size_t index) {
 		target->next->previous = target->previous;
 	}
 
-	dnode_destruct(target);
+	dlist_node_destruct(target);
 	list->length--;
 }
 
@@ -179,7 +179,7 @@ void *dlist_fetch_node(dlist *list, size_t index) {
 	if (!_validate_dindex(list, index))
 		return NULL;
 
-	dnode *node = _dlist_iterate(list, index);
+	dlist_node *node = _dlist_iterate(list, index);
 	if (!node) {
 		fprintf(stderr, "[dlist:fetch_node] Node not found at index %zu.\n", index);
 	}
@@ -196,7 +196,7 @@ void dlist_print(dlist *list) {
 		return;
 	}
 
-	dnode *current = list->head;
+	dlist_node *current = list->head;
 	while (current != NULL) {
 		const td *type = current->type;
 		if (type && type->print) {

@@ -4,11 +4,11 @@
 #define DEQUE_H
 
 #include "td.h"
-#include "deque/dqnode/dqnode.h"
+#include "deque/dqueue_node/dqueue_node.h"
 
 typedef struct deque {
-	dqnode *head;
-	dqnode *tail;
+	dqueue_node *head;
+	dqueue_node *tail;
 	size_t length;
 } deque;
 

@@ -4,10 +4,10 @@
 #define STACK_H
 
 #include "td.h"
-#include "stack/stknode/stknode.h"
+#include "stack/stack_node/stack_node.h"
 
 typedef struct stack {
-	struct stknode *head;
+	struct stack_node *head;
 	size_t length;
 } stack;
 

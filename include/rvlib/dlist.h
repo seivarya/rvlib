@@ -4,11 +4,11 @@
 #define DLIST_H
 
 #include "td.h"
-#include "list/dlist/dnode/dnode.h"
+#include "list/dlist/dlist_node/dlist_node.h"
 
 typedef struct dlist {
-	dnode *head;
-	dnode *tail;
+	dlist_node *head;
+	dlist_node *tail;
 	size_t length;
 } dlist;
 

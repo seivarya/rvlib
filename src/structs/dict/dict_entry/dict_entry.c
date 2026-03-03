@@ -1,24 +1,24 @@
-/* <entry.c>: dictionary entry methods */
+/* <dict_dict_entry.c>: dictionary dict_entry methods */
 
-#include "entry.h"
+#include "dict_entry.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-entry *entry_construct(const char *key, void *value, const td *type) {
+dict_entry *dict_entry_construct(const char *key, void *value, const td *type) {
 	if (!key) {
-		fprintf(stderr, "[entry:construct] key cannot be NULL\n");
+		fprintf(stderr, "[dict_entry:construct] key cannot be NULL\n");
 		return NULL;
 	}
 
-	entry *node = malloc(sizeof(entry));
+	dict_entry *node = malloc(sizeof(dict_entry));
 	if (!node) {
-		perror("malloc failed: entry_construct");
+		perror("malloc failed: dict_entry_construct");
 		return NULL;
 	}
 
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[entry:construct] invalid type descriptor\n");
+		fprintf(stderr, "[dict_entry:construct] invalid type descriptor\n");
 		free(node);
 		return NULL;
 	}
@@ -27,7 +27,7 @@ entry *entry_construct(const char *key, void *value, const td *type) {
 
 	node->key = malloc(strlen(key) + 1);
 	if (!node->key) {
-		perror("malloc failed for key in entry_construct");
+		perror("malloc failed for key in dict_entry_construct");
 		free(node);
 		return NULL;
 	}
@@ -38,7 +38,7 @@ entry *entry_construct(const char *key, void *value, const td *type) {
 	} else {
 		node->value = malloc(type->size);
 		if (!node->value) {
-			perror("malloc failed for value in entry_construct");
+			perror("malloc failed for value in dict_entry_construct");
 			free(node->key);
 			free(node);
 			return NULL;
@@ -50,7 +50,7 @@ entry *entry_construct(const char *key, void *value, const td *type) {
 	return node;
 }
 
-void entry_destruct(entry *node) {
+void dict_entry_destruct(dict_entry *node) {
 	if (!node)
 		return;
 
@@ -63,4 +63,4 @@ void entry_destruct(entry *node) {
 	free(node->key);
 	free(node);
 }
-/* <entry.c> */
+/* <dict_entry.c> */

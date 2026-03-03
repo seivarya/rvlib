@@ -1,19 +1,18 @@
-/* <snode.c>: singly linked list node methods */
+/* <stack_node.c>: stack node methods */
 
-#include "snode.h"
+#include "stack_node.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-snode *snode_construct(void *data, const td *type) {
+stack_node *stack_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[snode:construct] invalid type descriptor\n");
+		fprintf(stderr, "[stack_node:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
-	snode *node = malloc(sizeof(snode));
+	stack_node *node = malloc(sizeof(stack_node));
 	if (!node) {
-		perror("malloc failed: snode_construct");
+		perror("malloc failed: stack_node_construct");
 		return NULL;
 	}
 
@@ -24,24 +23,25 @@ snode *snode_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[snode:construct] NULL data with no copy function\n");
+			fprintf(stderr, "[stack_node:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
 
 		node->data = malloc(type->size);
 		if (!node->data) {
-			perror("malloc failed for data in snode_construct");
+			perror("malloc failed for data in stack_node_construct");
 			free(node);
 			return NULL;
 		}
+
 		memcpy(node->data, data, type->size);
 	}
 
 	return node;
 }
 
-void snode_destruct(snode *node) {
+void stack_node_destruct(stack_node *node) {
 	if (!node)
 		return;
 
@@ -53,4 +53,4 @@ void snode_destruct(snode *node) {
 
 	free(node);
 }
-/* <snode.c> */
+/* <stack_node.c> */

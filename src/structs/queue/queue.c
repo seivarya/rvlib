@@ -14,7 +14,7 @@ static inline int _validate_queue_ptr(queue *q) {
 	return 1;
 }
 
-static inline void _validate_qnode_construction(queue *q, qnode *node) {
+static inline void _validate_queue_node_construction(queue *q, queue_node *node) {
 	if (!node) {
 		queue_destruct(q);
 		exit(3);
@@ -57,10 +57,10 @@ void queue_destruct(queue *q) {
 		return;
 
 	/* destroy all nodes */
-	qnode *current = q->head;
+	queue_node *current = q->head;
 	while (current != NULL) {
-		qnode *next = current->next;
-		qnode_destruct(current);
+		queue_node *next = current->next;
+		queue_node_destruct(current);
 		current = next;
 	}
 
@@ -71,8 +71,8 @@ void enqueue(queue *q, void *data, const td *type) {
 	if (!_validate_queue_ptr(q))
 		return;
 
-	qnode *new_node = qnode_construct(data, type);
-	_validate_qnode_construction(q, new_node);
+	queue_node *new_node = queue_node_construct(data, type);
+	_validate_queue_node_construction(q, new_node);
 
 	/* attach node to tail */
 	if (q->length == 0) {
@@ -95,7 +95,7 @@ void dequeue(queue *q) {
 		return;
 	}
 
-	qnode *target = q->head;
+	queue_node *target = q->head;
 
 	if (q->length == 1) {
 		q->head = NULL;
@@ -104,7 +104,7 @@ void dequeue(queue *q) {
 		q->head = target->next;
 	}
 
-	qnode_destruct(target);
+	queue_node_destruct(target);
 	q->length--;
 }
 

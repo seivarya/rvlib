@@ -44,22 +44,22 @@ endif
 TD_SRC := src/td/td.c
 
 SLIST_SRC := src/structs/list/slist/slist.c \
-	     src/structs/list/slist/snode/snode.c
+	     src/structs/list/slist/slist_node/slist_node.c
 
 DLIST_SRC := src/structs/list/dlist/dlist.c \
-	     src/structs/list/dlist/dnode/dnode.c
+	     src/structs/list/dlist/dlist_node/dlist_node.c
 
 CLIST_SRC := src/structs/list/clist/clist.c \
-	     src/structs/list/clist/cnode/cnode.c
+	     src/structs/list/clist/clist_node/clist_node.c
 
 STACK_SRC := src/structs/stack/stack.c \
-	     src/structs/stack/stknode/stknode.c
+	     src/structs/stack/stack_node/stack_node.c
 
 QUEUE_SRC := src/structs/queue/queue.c \
-	     src/structs/queue/qnode/qnode.c
+	     src/structs/queue/queue_node/queue_node.c
 
 DICT_SRC := src/structs/dict/dict.c \
-	    src/structs/dict/entry/entry.c
+	    src/structs/dict/dict_entry/dict_entry.c
 
 # ======================
 #  tests

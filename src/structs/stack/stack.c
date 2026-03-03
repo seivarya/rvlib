@@ -14,7 +14,7 @@ static inline int _validate_stack_ptr(stack *stk) {
 	return 1;
 }
 
-static inline void _validate_stknode_construction(stack *stk, stknode *node) {
+static inline void _validate_stack_node_construction(stack *stk, stack_node *node) {
 	if (!node) {
 		stack_destruct(stk);
 		exit(3);
@@ -56,10 +56,10 @@ void stack_destruct(stack *stk) {
 		return;
 
 	/* destroy all nodes */
-	stknode *current = stk->head;
+	stack_node *current = stk->head;
 	while (current != NULL) {
-		stknode *next = current->next;
-		stknode_destruct(current);
+		stack_node *next = current->next;
+		stack_node_destruct(current);
 		current = next;
 	}
 
@@ -70,8 +70,8 @@ void push(stack *stk, void *data, const td *type) {
 	if (!_validate_stack_ptr(stk))
 		return;
 
-	stknode *new_node = stknode_construct(data, type);
-	_validate_stknode_construction(stk, new_node);
+	stack_node *new_node = stack_node_construct(data, type);
+	_validate_stack_node_construction(stk, new_node);
 
 	/* insert at head */
 	if (stk->length == 0) {
@@ -92,7 +92,7 @@ void pop(stack *stk) {
 		return;
 	}
 
-	stknode *target = stk->head;
+	stack_node *target = stk->head;
 
 	/* update head */
 	if (stk->length == 1) {
@@ -101,7 +101,7 @@ void pop(stack *stk) {
 		stk->head = target->next;
 	}
 
-	stknode_destruct(target);
+	stack_node_destruct(target);
 	stk->length--;
 }
 

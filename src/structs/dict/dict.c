@@ -21,10 +21,10 @@ static inline int _validate_key(const char *key) {
 	return 1;
 }
 
-static inline void _validate_entry_construction(entry *node) {
+static inline void _validate_dict_entry_construction(dict_entry *node) {
 	if (!node) {
-		fprintf(stderr, "[dict:validate_entry_construction] Failed to construct "
-	  "dictionary entry node, aborting.\n");
+		fprintf(stderr, "[dict:validate_dict_entry_construction] Failed to construct "
+	  "dictionary dict_entry node, aborting.\n");
 		return;
 	}
 }
@@ -42,7 +42,7 @@ dict *dict_construct(unsigned long buckets) {
 		return NULL;
 	}
 
-	dictionary->entries = calloc(buckets, sizeof(entry *));
+	dictionary->entries = calloc(buckets, sizeof(dict_entry *));
 	dictionary->buckets = buckets;
 
 	if (!dictionary->entries) {
@@ -62,10 +62,10 @@ void dict_destruct(dict *dictionary) {
 		return;
 	if (dictionary->entries) {
 		for (unsigned long i = 0; i < dictionary->buckets; i++) {
-			entry *node = dictionary->entries[i];
+			dict_entry *node = dictionary->entries[i];
 			while (node) {
-				entry *next = node->next;
-				entry_destruct(node);
+				dict_entry *next = node->next;
+				dict_entry_destruct(node);
 				node = next;
 			}
 		}
@@ -79,7 +79,7 @@ void *dict_search(dict *dictionary, const char *key) {
 		return NULL;
 
 	unsigned int index = hash(dictionary, key);
-	entry *node = dictionary->entries[index];
+	dict_entry *node = dictionary->entries[index];
 
 	while (node != NULL) {
 		if (strcmp(node->key, key) == 0) {
@@ -102,7 +102,7 @@ void dict_insert(dict *dictionary, const char *key, void *value,
 	}
 
 	unsigned int index = hash(dictionary, key);
-	entry *node = dictionary->entries[index];
+	dict_entry *node = dictionary->entries[index];
 	/* insert at head of bucket chain */
 	while (node != NULL) {
 		if (strcmp(node->key, key) == 0) {
@@ -112,8 +112,8 @@ void dict_insert(dict *dictionary, const char *key, void *value,
 		node = node->next;
 	}
 
-	entry *node_to_insert = entry_construct(key, value, type);
-	_validate_entry_construction(node_to_insert);
+	dict_entry *node_to_insert = dict_entry_construct(key, value, type);
+	_validate_dict_entry_construction(node_to_insert);
 
 	node_to_insert->next = dictionary->entries[index];
 	dictionary->entries[index] = node_to_insert;
@@ -124,8 +124,8 @@ void dict_remove(dict *dictionary, const char *key) {
 		return;
 
 	unsigned int index = hash(dictionary, key);
-	entry *node = dictionary->entries[index];
-	entry *prev = NULL;
+	dict_entry *node = dictionary->entries[index];
+	dict_entry *prev = NULL;
 
 	while (node != NULL) {
 		if (strcmp(node->key, key) == 0) {
@@ -134,7 +134,7 @@ void dict_remove(dict *dictionary, const char *key) {
 			} else {
 				prev->next = node->next;
 			}
-			entry_destruct(node);
+			dict_entry_destruct(node);
 			return;
 		}
 		prev = node;
