@@ -15,7 +15,8 @@ static inline int _validate_slist_ptr(slist *list) {
 	return 1;
 }
 
-static inline void _validate_slist_node_construction(slist *list, slist_node *node) {
+static inline void _validate_slist_node_construction(slist *list,
+						     slist_node *node) {
 	if (!node) {
 		slist_destruct(list);
 		exit(3);
@@ -96,7 +97,7 @@ void slist_insert(slist *list, size_t index, void *data, const td *type) {
 		list->head = new_node;
 	}
 
-/* insert at middle or end */
+	/* insert at middle or end */
 	else {
 		slist_node *previous = _slist_iterate(list, index - 1);
 		new_node->next = previous->next;
@@ -163,5 +164,4 @@ void slist_print(slist *list) {
 		}
 		current = current->next;
 	}
-}
-/* <slist.c> */
+} /* <slist.c> */

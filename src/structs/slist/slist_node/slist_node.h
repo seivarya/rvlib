@@ -8,9 +8,9 @@
 typedef struct slist_node slist_node;
 
 struct slist_node {
-  void *data;
-  const td *type;
-  slist_node *next;
+	void *data;
+	const td *type;
+	slist_node *next;
 };
 
 slist_node *slist_node_construct(void *data, const td *type);

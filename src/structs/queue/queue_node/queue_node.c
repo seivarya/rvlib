@@ -2,6 +2,7 @@
 
 #include "queue_node.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 queue_node *queue_node_construct(void *data, const td *type) {
@@ -52,5 +53,4 @@ void queue_node_destruct(queue_node *node) {
 	}
 
 	free(node);
-}
-/* <queue_node.c> */
+} /* <queue_node.c> */

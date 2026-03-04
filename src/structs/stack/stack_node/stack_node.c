@@ -2,6 +2,7 @@
 
 #include "stack_node.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 stack_node *stack_node_construct(void *data, const td *type) {

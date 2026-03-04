@@ -11,7 +11,7 @@ typedef struct queue {
 	queue_node *tail;
 	size_t length;
 } queue;
-	
+
 queue* queue_construct(void);
 void queue_destruct(queue *q);
 

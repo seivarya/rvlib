@@ -3,7 +3,6 @@
 #ifndef QUEUE_NODE_H
 #define QUEUE_NODE_H
 
-#include <stdlib.h>
 #include <rvlib/td.h>
 
 typedef struct queue_node queue_node;

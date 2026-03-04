@@ -3,7 +3,6 @@
 #ifndef DLIST_NODE_H
 #define DLIST_NODE_H
 
-#include <stdlib.h>
 #include <rvlib/td.h>
 
 typedef struct dlist_node dlist_node;

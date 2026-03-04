@@ -15,7 +15,8 @@ static inline int _validate_dlist_ptr(dlist *list) {
 	return 1;
 }
 
-static inline void _validate_dlist_node_construction(dlist *list, dlist_node *node) {
+static inline void _validate_dlist_node_construction(dlist *list,
+						     dlist_node *node) {
 	if (!node) {
 		dlist_destruct(list);
 		exit(3);
@@ -209,5 +210,4 @@ void dlist_print(dlist *list) {
 		}
 		current = current->next;
 	}
-}
-/* <dlist.c> */
+} /* <dlist.c> */

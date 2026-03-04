@@ -3,6 +3,7 @@
 #include <rvlib/stack.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdlib.h>
 
 /* info: private methods */
 
@@ -14,7 +15,8 @@ static inline int _validate_stack_ptr(stack *stk) {
 	return 1;
 }
 
-static inline void _validate_stack_node_construction(stack *stk, stack_node *node) {
+static inline void _validate_stack_node_construction(stack *stk,
+						     stack_node *node) {
 	if (!node) {
 		stack_destruct(stk);
 		exit(3);
@@ -121,5 +123,4 @@ void *peek(stack *stk) {
 	}
 
 	return stk->head->data;
-}
-/* <stack.c> */
+} /* <stack.c> */

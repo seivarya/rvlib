@@ -23,8 +23,8 @@ static inline int _validate_key(const char *key) {
 
 static inline void _validate_dict_entry_construction(dict_entry *node) {
 	if (!node) {
-		fprintf(stderr, "[dict:validate_dict_entry_construction] Failed to construct "
-	  "dictionary dict_entry node, aborting.\n");
+		fprintf(stderr, "[dict:validate_dict_entry_construction] Failed to "
+	  "construct dictionary dict_entry node, aborting.\n");
 		return;
 	}
 }
@@ -155,5 +155,4 @@ unsigned int hash(dict *dictionary, const char *key) {
 		h = ((h << 5) + h) + c;
 	}
 	return (unsigned int)(h % dictionary->buckets);
-}
-/* <dict.c> */
+} /* <dict.c> */

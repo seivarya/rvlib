@@ -1,47 +1,49 @@
-/* <slist_node.c>: singly linked list node methods */
+/* <dlist_node.c>: doubly linked list node methods */
 
-#include "slist_node.h"
+#include "dlist_node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-slist_node *slist_node_construct(void *data, const td *type) {
+dlist_node *dlist_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[slist_node:construct] invalid type descriptor\n");
+		fprintf(stderr, "[dlist_node:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
-	slist_node *node = malloc(sizeof(slist_node));
+	dlist_node *node = malloc(sizeof(dlist_node));
 	if (!node) {
-		perror("malloc failed: slist_node_construct");
+		perror("malloc failed: dlist_node_construct");
 		return NULL;
 	}
 
 	node->type = type;
 	node->next = NULL;
+	node->previous = NULL;
 
 	if (type->copy) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[slist_node:construct] NULL data with no copy function\n");
+			fprintf(stderr, "[dlist_node:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
 
 		node->data = malloc(type->size);
 		if (!node->data) {
-			perror("malloc failed for data in slist_node_construct");
+			perror("malloc failed for data in dlist_node_construct");
 			free(node);
 			return NULL;
 		}
+
 		memcpy(node->data, data, type->size);
 	}
 
 	return node;
 }
 
-void slist_node_destruct(slist_node *node) {
+void dlist_node_destruct(dlist_node *node) {
 	if (!node)
 		return;
 
@@ -52,5 +54,4 @@ void slist_node_destruct(slist_node *node) {
 	}
 
 	free(node);
-}
-/* <slist_node.c> */
+} /* <dlist_node.c> */

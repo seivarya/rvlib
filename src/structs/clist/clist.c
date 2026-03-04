@@ -15,7 +15,8 @@ static inline int _validate_clist_ptr(clist *list) {
 	return 1;
 }
 
-static inline void _validate_clist_node_construction(clist *list, clist_node *node) {
+static inline void _validate_clist_node_construction(clist *list,
+						     clist_node *node) {
 	if (!node) {
 		clist_destruct(list);
 		exit(3);
@@ -228,5 +229,4 @@ void clist_print(clist *list) {
 		}
 		current = current->next;
 	} while (current != list->head);
-}
-/* <clist.c> */
+} /* <clist.c> */

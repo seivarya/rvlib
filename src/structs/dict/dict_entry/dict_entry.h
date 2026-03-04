@@ -1,3 +1,5 @@
+/* dict_entry.h: dictionary entry node header file */
+
 #ifndef DICT_ENTRY_H
 #define DICT_ENTRY_H
 

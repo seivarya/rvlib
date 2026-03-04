@@ -14,7 +14,8 @@ static inline int _validate_queue_ptr(queue *q) {
 	return 1;
 }
 
-static inline void _validate_queue_node_construction(queue *q, queue_node *node) {
+static inline void _validate_queue_node_construction(queue *q,
+						     queue_node *node) {
 	if (!node) {
 		queue_destruct(q);
 		exit(3);
@@ -137,5 +138,4 @@ void *get_rear(queue *q) {
 	}
 
 	return q->tail->data;
-}
-/* <queue.c> */
+} /* <queue.c> */
