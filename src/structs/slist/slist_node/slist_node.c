@@ -6,10 +6,6 @@
 #include <string.h>
 
 slist_node *slist_node_construct(void *data, const td *type) {
-	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[slist_node:construct] invalid type descriptor\n");
-		return NULL;
-	}
 
 	slist_node *node = malloc(sizeof(slist_node));
 	if (!node) {
@@ -24,7 +20,8 @@ slist_node *slist_node_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[slist_node:construct] NULL data with no copy function\n");
+			fprintf(stderr,
+	   "[slist_node:construct] NULL data with no copy function\n");
 			free(node);
 			return NULL;
 		}
@@ -41,9 +38,10 @@ slist_node *slist_node_construct(void *data, const td *type) {
 	return node;
 }
 
-void slist_node_destruct(slist_node *node) {
-	if (!node)
-		return;
+lib_status slist_node_destruct(slist_node *node) {
+	if (!node) {
+		return LIB_PTR_INVALID;
+	}
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -52,4 +50,5 @@ void slist_node_destruct(slist_node *node) {
 	}
 
 	free(node);
+	return LIB_OK;
 } /* <slist_node.c> */

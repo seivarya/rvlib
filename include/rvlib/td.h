@@ -3,8 +3,6 @@
 #ifndef TD_H
 #define TD_H
 
-#define TD_MAGIC 0x6969
-
 #include <stddef.h>
 #include <stdint.h>
 

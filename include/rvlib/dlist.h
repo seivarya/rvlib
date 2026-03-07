@@ -5,7 +5,7 @@
 
 #include "dlist/dlist_node/dlist_node.h"
 #include "td.h"
-
+#include <rvlib/err.h>
 
 typedef struct dlist {
 	dlist_node *head;
@@ -14,11 +14,11 @@ typedef struct dlist {
 } dlist;
 
 dlist *dlist_construct(void);
-void dlist_destruct(dlist *list);
+lib_status dlist_destruct(dlist *list);
 
-void dlist_insert(dlist *list, size_t index, void *data, const td *type);
-void dlist_remove(dlist *list, size_t index);
-void dlist_print(dlist *list);
+lib_status dlist_insert(dlist *list, size_t index, void *data, const td *type);
+lib_status dlist_remove(dlist *list, size_t index);
+lib_status dlist_print(dlist *list);
 
 void *dlist_fetch_node(dlist *list, size_t index);
 

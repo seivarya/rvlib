@@ -3,6 +3,7 @@
 #ifndef CLIST_NODE_H
 #define CLIST_NODE_H
 
+#include <rvlib/err.h>
 #include <rvlib/td.h>
 
 typedef struct clist_node clist_node;
@@ -14,7 +15,7 @@ struct clist_node {
 	clist_node *previous;
 };
 
-clist_node* clist_node_construct(void *data, const td *type);
-void clist_node_destruct(clist_node *node);
+clist_node *clist_node_construct(void *data, const td *type);
+lib_status clist_node_destruct(clist_node *node);
 
 #endif /* clist_node_h */

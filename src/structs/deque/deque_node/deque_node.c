@@ -45,9 +45,9 @@ deque_node *deque_node_construct(void *data, const td *type) {
 	return node;
 }
 
-void deque_node_destruct(deque_node *node) {
+lib_status deque_node_destruct(deque_node *node) {
 	if (!node)
-		return;
+		return LIB_PTR_INVALID;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -56,4 +56,5 @@ void deque_node_destruct(deque_node *node) {
 	}
 
 	free(node);
+	return LIB_OK;
 } /* <deque_node.c> */

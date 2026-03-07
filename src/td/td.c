@@ -11,13 +11,6 @@ int td_validator(const td *t) {
             "[td:validator] null type descriptor provided for validation.\n");
     return 0;
   }
-  if (t->magic != TD_MAGIC) {
-    fprintf(stderr,
-            "[td:validator] type descriptor magic mismatch. expected 0x%X, got "
-            "0x%X.\n",
-            TD_MAGIC, t->magic);
-    return 0;
-  }
   return 1;
 }
 
@@ -102,7 +95,7 @@ int compare_char(void *a, void *b) {
   return (x > y) - (x < y);
 }
 
-const td TD_STR = {.magic = TD_MAGIC,
+const td TD_STR = {
                    .size = sizeof(char *),
                    .print = print_str,
                    .hash = hash_str,
@@ -110,7 +103,7 @@ const td TD_STR = {.magic = TD_MAGIC,
                    .copy = NULL,
                    .destruct = NULL};
 
-const td TD_INT = {.magic = TD_MAGIC,
+const td TD_INT = {
                    .size = sizeof(int),
                    .print = print_int,
                    .hash = hash_int,
@@ -118,7 +111,7 @@ const td TD_INT = {.magic = TD_MAGIC,
                    .copy = NULL,
                    .destruct = NULL};
 
-const td TD_UINT = {.magic = TD_MAGIC,
+const td TD_UINT = {
                     .size = sizeof(unsigned int),
                     .print = print_uint,
                     .hash = hash_uint,
@@ -126,7 +119,7 @@ const td TD_UINT = {.magic = TD_MAGIC,
                     .copy = NULL,
                     .destruct = NULL};
 
-const td TD_LONG = {.magic = TD_MAGIC,
+const td TD_LONG = {
                     .size = sizeof(long),
                     .print = print_long,
                     .hash = hash_long,
@@ -134,7 +127,7 @@ const td TD_LONG = {.magic = TD_MAGIC,
                     .copy = NULL,
                     .destruct = NULL};
 
-const td TD_ULONG = {.magic = TD_MAGIC,
+const td TD_ULONG = {
                      .size = sizeof(unsigned long),
                      .print = print_ulong,
                      .hash = hash_ulong,
@@ -142,7 +135,7 @@ const td TD_ULONG = {.magic = TD_MAGIC,
                      .copy = NULL,
                      .destruct = NULL};
 
-const td TD_SHORT = {.magic = TD_MAGIC,
+const td TD_SHORT = {
                      .size = sizeof(short),
                      .print = print_short,
                      .hash = hash_short,
@@ -150,7 +143,7 @@ const td TD_SHORT = {.magic = TD_MAGIC,
                      .copy = NULL,
                      .destruct = NULL};
 
-const td TD_USHORT = {.magic = TD_MAGIC,
+const td TD_USHORT = {
                       .size = sizeof(unsigned short),
                       .print = print_ushort,
                       .hash = hash_ushort,
@@ -158,7 +151,7 @@ const td TD_USHORT = {.magic = TD_MAGIC,
                       .copy = NULL,
                       .destruct = NULL};
 
-const td TD_BOOL = {.magic = TD_MAGIC,
+const td TD_BOOL = {
                     .size = sizeof(int),
                     .print = print_bool,
                     .hash = hash_bool,
@@ -166,7 +159,7 @@ const td TD_BOOL = {.magic = TD_MAGIC,
                     .copy = NULL,
                     .destruct = NULL};
 
-const td TD_SIZE_T = {.magic = TD_MAGIC,
+const td TD_SIZE_T = {
                       .size = sizeof(size_t),
                       .print = print_size_t,
                       .hash = hash_size_t,
@@ -174,7 +167,7 @@ const td TD_SIZE_T = {.magic = TD_MAGIC,
                       .copy = NULL,
                       .destruct = NULL};
 
-const td TD_CHAR = {.magic = TD_MAGIC,
+const td TD_CHAR = {
                     .size = sizeof(char),
                     .print = print_char,
                     .hash = hash_char,

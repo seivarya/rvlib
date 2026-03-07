@@ -50,9 +50,9 @@ dict_entry *dict_entry_construct(const char *key, void *value, const td *type) {
 	return node;
 }
 
-void dict_entry_destruct(dict_entry *node) {
+lib_status dict_entry_destruct(dict_entry *node) {
 	if (!node)
-		return;
+		return LIB_PTR_INVALID;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->value);
@@ -62,5 +62,6 @@ void dict_entry_destruct(dict_entry *node) {
 
 	free(node->key);
 	free(node);
+	return LIB_OK;
 }
 /* <dict_entry.c> */

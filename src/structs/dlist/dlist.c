@@ -6,41 +6,42 @@
 
 /* info: private methods */
 
-static inline int _validate_dlist_ptr(dlist *list) {
+static inline lib_status _validate_dlist_ptr(dlist *list) {
 	if (list == NULL) {
 		fprintf(stderr,
 	  "[dlist:validate_dlist_ptr] Doubly linked list pointer is NULL.\n");
-		return 0;
+		return LIB_PTR_INVALID;
 	}
-	return 1;
+	return LIB_OK;
 }
 
-static inline void _validate_dlist_node_construction(dlist *list,
-						     dlist_node *node) {
+static inline lib_status _validate_dlist_node_construction(dlist *list,
+							   dlist_node *node) {
 	if (!node) {
 		dlist_destruct(list);
-		exit(3);
+		return LIB_ERR_MALLOC;
 	}
+	return LIB_OK;
 }
 
-static inline int _validate_dindex(dlist *list, size_t index) {
+static inline lib_status _validate_dindex(dlist *list, size_t index) {
 	if (list == NULL) {
 		fprintf(stderr, "[dlist:validate_dindex] Doubly linked list pointer is "
 	  "NULL for index validation.\n");
-		return 0;
+		return LIB_PTR_INVALID;
 	}
 	if (index >= list->length) {
 		fprintf(stderr,
 	  "[dlist:validate_dindex] Index %zu out of bounds for list length "
 	  "%zu.\n",
 	  index, list->length);
-		return 0;
+		return LIB_PTR_INVALID;
 	}
-	return 1;
+	return LIB_OK;
 }
 
 static dlist_node *_dlist_iterate(dlist *list, size_t index) {
-	if (!_validate_dindex(list, index))
+	if (_validate_dindex(list, index) != LIB_OK)
 		return NULL;
 
 	size_t mid_index = list->length / 2;
@@ -78,9 +79,9 @@ dlist *dlist_construct(void) {
 	return NULL;
 }
 
-void dlist_destruct(dlist *list) {
-	if (!_validate_dlist_ptr(list))
-		return;
+lib_status dlist_destruct(dlist *list) {
+	if (_validate_dlist_ptr(list) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	dlist_node *current = list->head;
 	while (current != NULL) {
@@ -90,20 +91,23 @@ void dlist_destruct(dlist *list) {
 	}
 
 	free(list);
+	return LIB_OK;
 }
 
-void dlist_insert(dlist *list, size_t index, void *data, const td *type) {
-	if (!_validate_dlist_ptr(list))
-		return;
+lib_status dlist_insert(dlist *list, size_t index, void *data, const td *type) {
+	if (_validate_dlist_ptr(list) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	if (index > list->length) {
 		fprintf(stderr, "[dlist:insert] Index %zu is out of bounds (length %zu).\n",
 	  index, list->length);
-		return;
+		return LIB_INDEX_ERR;
 	}
 
 	dlist_node *new_node = dlist_node_construct(data, type);
-	_validate_dlist_node_construction(list, new_node);
+	lib_status c_status = _validate_dlist_node_construction(list, new_node);
+	if (c_status != LIB_OK)
+		return c_status;
 
 	/* case 1: insert at head */
 	if (index == 0) {
@@ -135,11 +139,12 @@ void dlist_insert(dlist *list, size_t index, void *data, const td *type) {
 	}
 
 	list->length++;
+	return LIB_OK;
 }
 
-void dlist_remove(dlist *list, size_t index) {
-	if (!_validate_dindex(list, index))
-		return;
+lib_status dlist_remove(dlist *list, size_t index) {
+	if (_validate_dindex(list, index) != LIB_OK)
+		return LIB_INDEX_ERR;
 
 	dlist_node *target;
 
@@ -174,10 +179,11 @@ void dlist_remove(dlist *list, size_t index) {
 
 	dlist_node_destruct(target);
 	list->length--;
+	return LIB_OK;
 }
 
 void *dlist_fetch_node(dlist *list, size_t index) {
-	if (!_validate_dindex(list, index))
+	if (_validate_dindex(list, index) != LIB_OK)
 		return NULL;
 
 	dlist_node *node = _dlist_iterate(list, index);
@@ -187,14 +193,14 @@ void *dlist_fetch_node(dlist *list, size_t index) {
 	return node;
 }
 
-void dlist_print(dlist *list) {
-	if (!_validate_dlist_ptr(list))
-		return;
+lib_status dlist_print(dlist *list) {
+	if (_validate_dlist_ptr(list) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	if (list->length == 0) {
 		fprintf(stderr,
 	  "[dlist:print] Doubly linked list is empty, cannot print.\n");
-		return;
+		return LIB_PTR_INVALID;
 	}
 
 	dlist_node *current = list->head;
@@ -210,4 +216,5 @@ void dlist_print(dlist *list) {
 		}
 		current = current->next;
 	}
+	return LIB_OK;
 } /* <dlist.c> */

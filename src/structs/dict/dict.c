@@ -5,28 +5,29 @@
 #include <stdlib.h>
 #include <string.h>
 
-static inline int _validate_dict_ptr(dict *dictionary) {
+static inline lib_status _validate_dict_ptr(dict *dictionary) {
 	if (dictionary == NULL) {
 		fprintf(stderr, "[dict:validate_dict_ptr] Dictionary pointer is NULL.\n");
-		return 0;
+		return LIB_PTR_INVALID;
 	}
-	return 1;
+	return LIB_OK;
 }
 
-static inline int _validate_key(const char *key) {
+static inline lib_status _validate_key(const char *key) {
 	if (key == NULL || *key == '\0') {
 		fprintf(stderr, "[dict:validate_key] Key is NULL or empty.\n");
-		return 0;
+		return LIB_PTR_INVALID;
 	}
-	return 1;
+	return LIB_OK;
 }
 
-static inline void _validate_dict_entry_construction(dict_entry *node) {
+static inline lib_status _validate_dict_entry_construction(dict_entry *node) {
 	if (!node) {
 		fprintf(stderr, "[dict:validate_dict_entry_construction] Failed to "
 	  "construct dictionary dict_entry node, aborting.\n");
-		return;
+		return LIB_ERR_MALLOC;
 	}
+	return LIB_OK;
 }
 
 dict *dict_construct(unsigned long buckets) {
@@ -57,9 +58,9 @@ dict *dict_construct(unsigned long buckets) {
 	return dictionary;
 }
 
-void dict_destruct(dict *dictionary) {
-	if (!_validate_dict_ptr(dictionary))
-		return;
+lib_status dict_destruct(dict *dictionary) {
+	if (_validate_dict_ptr(dictionary) != LIB_OK)
+		return LIB_PTR_INVALID;
 	if (dictionary->entries) {
 		for (unsigned long i = 0; i < dictionary->buckets; i++) {
 			dict_entry *node = dictionary->entries[i];
@@ -72,10 +73,11 @@ void dict_destruct(dict *dictionary) {
 	}
 	free(dictionary->entries);
 	free(dictionary);
+	return LIB_OK;
 }
 
 void *dict_search(dict *dictionary, const char *key) {
-	if (!_validate_dict_ptr(dictionary) || !_validate_key(key))
+	if (_validate_dict_ptr(dictionary) != LIB_OK || _validate_key(key) != LIB_OK)
 		return NULL;
 
 	unsigned int index = hash(dictionary, key);
@@ -91,14 +93,15 @@ void *dict_search(dict *dictionary, const char *key) {
 	return NULL;
 }
 
-void dict_insert(dict *dictionary, const char *key, void *value,
-		 const td *type) {
-	if (!_validate_dict_ptr(dictionary) || !_validate_key(key)) {
-		return;
+lib_status dict_insert(dict *dictionary, const char *key, void *value,
+		       const td *type) {
+	if (_validate_dict_ptr(dictionary) != LIB_OK ||
+		_validate_key(key) != LIB_OK) {
+		return LIB_PTR_INVALID;
 	}
 	if (value == NULL) {
 		fprintf(stderr, "[dict:insert] Value pointer is NULL for key '%s'.\n", key);
-		return;
+		return LIB_PTR_INVALID;
 	}
 
 	unsigned int index = hash(dictionary, key);
@@ -107,21 +110,24 @@ void dict_insert(dict *dictionary, const char *key, void *value,
 	while (node != NULL) {
 		if (strcmp(node->key, key) == 0) {
 			fprintf(stderr, "[dict:insert] duplicate key\n");
-			return;
+			return LIB_PTR_INVALID;
 		}
 		node = node->next;
 	}
 
 	dict_entry *node_to_insert = dict_entry_construct(key, value, type);
-	_validate_dict_entry_construction(node_to_insert);
+	lib_status c_status = _validate_dict_entry_construction(node_to_insert);
+	if (c_status != LIB_OK)
+		return c_status;
 
 	node_to_insert->next = dictionary->entries[index];
 	dictionary->entries[index] = node_to_insert;
+	return LIB_OK;
 }
 
-void dict_remove(dict *dictionary, const char *key) {
-	if (!_validate_dict_ptr(dictionary) || !_validate_key(key))
-		return;
+lib_status dict_remove(dict *dictionary, const char *key) {
+	if (_validate_dict_ptr(dictionary) != LIB_OK || _validate_key(key) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	unsigned int index = hash(dictionary, key);
 	dict_entry *node = dictionary->entries[index];
@@ -135,7 +141,7 @@ void dict_remove(dict *dictionary, const char *key) {
 				prev->next = node->next;
 			}
 			dict_entry_destruct(node);
-			return;
+			return LIB_OK;
 		}
 		prev = node;
 		node = node->next;
@@ -143,10 +149,11 @@ void dict_remove(dict *dictionary, const char *key) {
 
 	fprintf(stderr,
 	 "[dict:remove] Key '%s' not found in dictionary for removal.\n", key);
+	return LIB_INDEX_ERR;
 }
 
 unsigned int hash(dict *dictionary, const char *key) {
-	if (!_validate_key(key))
+	if (_validate_key(key) != LIB_OK)
 		return 0;
 
 	unsigned long h = 5381;

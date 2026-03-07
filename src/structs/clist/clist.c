@@ -6,41 +6,41 @@
 
 /* info: private methods */
 
-static inline int _validate_clist_ptr(clist *list) {
+static inline lib_status _validate_clist_ptr(clist *list) {
 	if (list == NULL) {
 		fprintf(stderr,
 	  "[clist:validate_clist_ptr] Circular list pointer is NULL.\n");
-		return 0;
+		return LIB_PTR_INVALID;
 	}
-	return 1;
+	return LIB_OK;
 }
 
-static inline void _validate_clist_node_construction(clist *list,
-						     clist_node *node) {
+static inline lib_status _validate_clist_node_construction(clist *list,
+							   clist_node *node) {
 	if (!node) {
 		clist_destruct(list);
-		exit(3);
+		return LIB_ERR_MALLOC;
 	}
+	return LIB_OK;
 }
 
-static inline int _validate_cindex(clist *list, size_t index) {
-	if (list == NULL) {
-		fprintf(stderr, "[clist:validate_cindex] Circular list pointer is NULL for "
-	  "index validation.\n");
-		return 0;
+static inline lib_status _validate_cindex(clist *list, size_t index) {
+	lib_status status = _validate_clist_ptr(list);
+	if (status != LIB_OK) {
+		return status;
 	}
 	if (index >= list->length) {
 		fprintf(stderr,
 	  "[clist:validate_cindex] Index %zu out of bounds for list length "
 	  "%zu.\n",
 	  index, list->length);
-		return 0;
+		return LIB_INDEX_ERR;
 	}
-	return 1;
+	return LIB_OK;
 }
 
 static clist_node *_clist_iterate(clist *list, size_t index) {
-	if (!_validate_cindex(list, index))
+	if (_validate_cindex(list, index) != LIB_OK)
 		return NULL;
 
 	size_t mid_index = (list->length / 2);
@@ -77,13 +77,13 @@ clist *clist_construct(void) {
 	return NULL;
 }
 
-void clist_destruct(clist *list) {
-	if (!_validate_clist_ptr(list))
-		return;
+lib_status clist_destruct(clist *list) {
+	if (_validate_clist_ptr(list) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	if (list->length == 0) {
 		free(list);
-		return;
+		return LIB_PTR_INVALID;
 	}
 
 	clist_node *current = list->head;
@@ -94,20 +94,23 @@ void clist_destruct(clist *list) {
 		current = next;
 	} while (current != head);
 	free(list);
+	return LIB_OK;
 }
 
-void clist_insert(clist *list, size_t index, void *data, const td *type) {
-	if (!_validate_clist_ptr(list))
-		return;
+lib_status clist_insert(clist *list, size_t index, void *data, const td *type) {
+	if (_validate_clist_ptr(list) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	if (index > list->length) {
 		fprintf(stderr, "[clist:insert] Index %zu is out of bounds (length %zu).\n",
 	  index, list->length);
-		return;
+		return LIB_PTR_INVALID;
 	}
 
 	clist_node *new_node = clist_node_construct(data, type);
-	_validate_clist_node_construction(list, new_node);
+	lib_status c_status = _validate_clist_node_construction(list, new_node);
+	if (c_status != LIB_OK)
+		return c_status;
 
 	/* case 1: insert at head */
 	if (index == 0) {
@@ -151,11 +154,12 @@ void clist_insert(clist *list, size_t index, void *data, const td *type) {
 	}
 
 	list->length++;
+	return LIB_OK;
 }
 
-void clist_remove(clist *list, size_t index) {
-	if (!_validate_cindex(list, index))
-		return;
+lib_status clist_remove(clist *list, size_t index) {
+	if (_validate_cindex(list, index) != LIB_OK)
+		return LIB_INDEX_ERR;
 
 	clist_node *target;
 
@@ -194,10 +198,11 @@ void clist_remove(clist *list, size_t index) {
 
 	clist_node_destruct(target);
 	list->length--;
+	return LIB_OK;
 }
 
 void *clist_fetch_node(clist *list, size_t index) {
-	if (!_validate_cindex(list, index))
+	if (_validate_cindex(list, index) != LIB_OK)
 		return NULL;
 
 	clist_node *node = _clist_iterate(list, index);
@@ -207,13 +212,13 @@ void *clist_fetch_node(clist *list, size_t index) {
 	return node;
 }
 
-void clist_print(clist *list) {
-	if (!_validate_clist_ptr(list))
-		return;
+lib_status clist_print(clist *list) {
+	if (_validate_clist_ptr(list) != LIB_OK)
+		return LIB_PTR_INVALID;
 
 	if (list->length == 0) {
 		fprintf(stderr, "[clist:print] Circular list is empty, cannot print.\n");
-		return;
+		return LIB_PTR_INVALID;
 	}
 
 	clist_node *current = list->head;
@@ -229,4 +234,5 @@ void clist_print(clist *list) {
 		}
 		current = current->next;
 	} while (current != list->head);
+	return LIB_OK;
 } /* <clist.c> */

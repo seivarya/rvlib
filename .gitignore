@@ -4,6 +4,11 @@
 # clangd files
 compile_commands.json
 
+# build/ cache files
+build
+run_tests
+.cache
+
 # Object files
 *.o
 *.ko

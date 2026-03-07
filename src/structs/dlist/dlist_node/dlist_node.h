@@ -3,6 +3,7 @@
 #ifndef DLIST_NODE_H
 #define DLIST_NODE_H
 
+#include <rvlib/err.h>
 #include <rvlib/td.h>
 
 typedef struct dlist_node dlist_node;
@@ -14,7 +15,7 @@ struct dlist_node {
 	dlist_node *previous;
 };
 
-dlist_node* dlist_node_construct(void *data, const td *type);
-void dlist_node_destruct(dlist_node *node);
+dlist_node *dlist_node_construct(void *data, const td *type);
+lib_status dlist_node_destruct(dlist_node *node);
 
 #endif /* dlist_node_h */

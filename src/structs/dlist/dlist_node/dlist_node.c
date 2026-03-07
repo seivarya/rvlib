@@ -7,7 +7,8 @@
 
 dlist_node *dlist_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[dlist_node:construct] Invalid or NULL type descriptor.\n");
+		fprintf(stderr,
+	  "[dlist_node:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
@@ -25,7 +26,8 @@ dlist_node *dlist_node_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[dlist_node:construct] NULL data with no copy function.\n");
+			fprintf(stderr,
+	   "[dlist_node:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
@@ -43,9 +45,9 @@ dlist_node *dlist_node_construct(void *data, const td *type) {
 	return node;
 }
 
-void dlist_node_destruct(dlist_node *node) {
+lib_status dlist_node_destruct(dlist_node *node) {
 	if (!node)
-		return;
+		return LIB_PTR_INVALID;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -54,4 +56,5 @@ void dlist_node_destruct(dlist_node *node) {
 	}
 
 	free(node);
+	return LIB_OK;
 } /* <dlist_node.c> */

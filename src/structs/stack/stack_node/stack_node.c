@@ -7,7 +7,8 @@
 
 stack_node *stack_node_construct(void *data, const td *type) {
 	if (!type || !td_validator(type)) {
-		fprintf(stderr, "[stack_node:construct] Invalid or NULL type descriptor.\n");
+		fprintf(stderr,
+	  "[stack_node:construct] Invalid or NULL type descriptor.\n");
 		return NULL;
 	}
 
@@ -24,7 +25,8 @@ stack_node *stack_node_construct(void *data, const td *type) {
 		node->data = type->copy(data);
 	} else {
 		if (!data) {
-			fprintf(stderr, "[stack_node:construct] NULL data with no copy function.\n");
+			fprintf(stderr,
+	   "[stack_node:construct] NULL data with no copy function.\n");
 			free(node);
 			return NULL;
 		}
@@ -42,9 +44,9 @@ stack_node *stack_node_construct(void *data, const td *type) {
 	return node;
 }
 
-void stack_node_destruct(stack_node *node) {
+lib_status stack_node_destruct(stack_node *node) {
 	if (!node)
-		return;
+		return LIB_PTR_INVALID;
 
 	if (node->type && node->type->destruct) {
 		node->type->destruct(node->data);
@@ -53,5 +55,6 @@ void stack_node_destruct(stack_node *node) {
 	}
 
 	free(node);
+	return LIB_OK;
 }
 /* <stack_node.c> */

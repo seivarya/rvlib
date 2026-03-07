@@ -3,7 +3,6 @@
 #include <rvlib/slist.h>
 #include <rvlib/td.h>
 
-/* ---------------------- TEST HARNESS ---------------------- */
 
 static int failures = 0;
 #define CHECK(cond) do { \
@@ -230,7 +229,6 @@ static void test_struct_copy_and_print(void) {
 	struct test_data data = { 32, "static-string" };
 
 	td TD_STRUCT = {
-		.magic = TD_MAGIC,
 		.size = sizeof(struct test_data),
 		.print = print_struct,
 		.hash = NULL,

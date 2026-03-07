@@ -2,10 +2,14 @@
 #define ERR_H
 
 typedef enum {
-	RV_OK = 0,
-	RV_ERR_IO,
-	RV_ERR_PTR_INVALID,
-	RV_ERR_NOMEM
-} resv;
+	LIB_OK = 0,
+	LIB_ERR_IO,
+	LIB_PTR_INVALID,
+	LIB_ERR_NOMEM,
+	LIB_INDEX_ERR,
+	LIB_LENGTH_ERR,
+	LIB_ERR_MALLOC,
+	LIB_TD_FUNC_MISSING
+} lib_status;
 
 #endif

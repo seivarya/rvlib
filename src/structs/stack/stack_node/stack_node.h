@@ -3,7 +3,8 @@
 #ifndef STACK_NODE_H
 #define STACK_NODE_H
 
-#include <rvlib/td.h> 
+#include <rvlib/err.h>
+#include <rvlib/td.h>
 
 typedef struct stack_node stack_node;
 
@@ -13,7 +14,7 @@ struct stack_node {
 	stack_node *next;
 };
 
-stack_node* stack_node_construct(void *data, const td *type);
-void stack_node_destruct(stack_node *node);
+stack_node *stack_node_construct(void *data, const td *type);
+lib_status stack_node_destruct(stack_node *node);
 
 #endif /* stack_node_h */
