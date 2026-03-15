@@ -1,7 +1,6 @@
 #include <rvlib/dict.h>
 #include <rvlib/rvlib.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 static int failures = 0;

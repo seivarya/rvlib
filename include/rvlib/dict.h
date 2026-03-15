@@ -13,13 +13,16 @@ typedef struct dict {
 	dict_entry **entries; // each arr element will have dict_entry *
 } dict;
 
+
 dict *dict_construct(unsigned long buckets);
 lib_status dict_destruct(dict *dictionary);
 
 void *dict_search(dict *dictionary, const char *key);
-lib_status dict_insert(dict *dictionary, const char *key, void *value,
-		       const td *type);
-lib_status dict_remove(dict *dictionary, const char *key);
+lib_status dict_insert(dict *dictionary, const char *key, void *value, const td *type);
+
+lib_status dict_entry_replace(dict *dictionary, const char *key, const char *new_key, void *new_value, const td *new_type);
+
+lib_status dict_entry_remove(dict *dictionary, const char *key);
 
 unsigned int hash(dict *dictionary, const char *key);
 

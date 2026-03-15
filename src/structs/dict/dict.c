@@ -23,8 +23,7 @@ static inline lib_status _validate_key(const char *key) {
 
 static inline lib_status _validate_dict_entry_construction(dict_entry *node) {
 	if (!node) {
-		fprintf(stderr, "[dict:validate_dict_entry_construction] Failed to "
-	  "construct dictionary dict_entry node, aborting.\n");
+		fprintf(stderr, "[dict:validate_dict_entry_construction] Failed to construct dictionary dict_entry node, aborting.\n");
 		return LIB_ERR_MALLOC;
 	}
 	return LIB_OK;
@@ -93,10 +92,10 @@ void *dict_search(dict *dictionary, const char *key) {
 	return NULL;
 }
 
-lib_status dict_insert(dict *dictionary, const char *key, void *value,
-		       const td *type) {
-	if (_validate_dict_ptr(dictionary) != LIB_OK ||
-		_validate_key(key) != LIB_OK) {
+
+
+lib_status dict_insert(dict *dictionary, const char *key, void *value, const td *type) {
+	if (_validate_dict_ptr(dictionary) != LIB_OK || _validate_key(key) != LIB_OK) {
 		return LIB_PTR_INVALID;
 	}
 	if (value == NULL) {
@@ -117,15 +116,14 @@ lib_status dict_insert(dict *dictionary, const char *key, void *value,
 
 	dict_entry *node_to_insert = dict_entry_construct(key, value, type);
 	lib_status c_status = _validate_dict_entry_construction(node_to_insert);
-	if (c_status != LIB_OK)
-		return c_status;
+	if (c_status != LIB_OK) return c_status;
 
 	node_to_insert->next = dictionary->entries[index];
 	dictionary->entries[index] = node_to_insert;
 	return LIB_OK;
 }
 
-lib_status dict_remove(dict *dictionary, const char *key) {
+lib_status dict_entry_remove(dict *dictionary, const char *key) {
 	if (_validate_dict_ptr(dictionary) != LIB_OK || _validate_key(key) != LIB_OK)
 		return LIB_PTR_INVALID;
 
@@ -151,6 +149,32 @@ lib_status dict_remove(dict *dictionary, const char *key) {
 	 "[dict:remove] Key '%s' not found in dictionary for removal.\n", key);
 	return LIB_INDEX_ERR;
 }
+
+lib_status dict_entry_replace(dict *dictionary, const char *key, const char *new_key, void *new_value, const td *new_type) {
+	if (_validate_dict_ptr(dictionary) != LIB_OK || _validate_key(key) != LIB_OK)
+		return LIB_PTR_INVALID;
+	unsigned int index = hash(dictionary, new_key);
+	dict_entry *node_to_replace = dictionary->entries[index];
+	dict_entry *prev = NULL;
+
+	while (node_to_replace != NULL) {
+		if (strcmp(node_to_replace->key, new_key) == 0) {
+			dict_entry *node_to_insert = dict_entry_construct(new_key, new_value, new_type);
+			if (prev == NULL) { // head of bucket
+				node_to_insert->next = node_to_replace->next;
+				node_to_replace = node_to_insert;
+			} else {
+				node_to_replace->next = node_to_insert->next;
+				prev->next = node_to_insert; //  BUG: its unfinished
+			}
+			prev = node_to_replace;
+			node_to_replace = node_to_replace->next;
+		}
+	}
+	return LIB_OK;
+}
+
+
 
 unsigned int hash(dict *dictionary, const char *key) {
 	if (_validate_key(key) != LIB_OK)
